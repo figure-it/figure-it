@@ -7,8 +7,8 @@ Pixel:
   - y: signed int 4 bytes
   
 Size: 
-  - x: unsigned int 4 bytes
-  - y: unsigned int 4 bytes
+  - width: unsigned int 4 bytes
+  - height: unsigned int 4 bytes
 
 Player
   - id: unsigned int 4 bytes
@@ -26,6 +26,7 @@ Figure
   - id: unsigned int 4 bytes
   - size: Size
   - pixels: Pixel[]
+  - winPoints: unsigned int
   
 
 ## Protocol
@@ -33,22 +34,43 @@ Figure
 
 ### HTTP
 
-1. getOnlinePlayers
+##### GET /game/onlinePlayers
+```json
+{
+  "players": [{
+  }]
+}
+```
 
 
-1. getCurrentMap
+##### GET /game/currentMap
+```json
+{
 
+}
+```
 
-1. authorize
-id
-position
+##### POST /game/authorize
+Request:
+```json
+{
+  "name": "asdf",
+  "color": "red"
+}
+```
+
+Response:
+```json
+{
+  "id": 122
+}
+```
 
 ### WebSocket
 
-
-
 #### from client to server
-1. move
+
+##### move
 ```json
 {
  "action": "move",
@@ -58,7 +80,7 @@ position
 }
 ```
 
-1. logout
+##### logout
 ```json
 {
  "action": "logout",
@@ -68,7 +90,8 @@ position
 
 
 #### from server to client
-1. updates
+
+##### updates
 ```json
 {
  "action": "updates",
@@ -89,26 +112,34 @@ position
 }
 ```
 
-
-1. playerLogin
-```json
+##### figure
+```
 {
- "action": "playerLogin",
- "data": {
-   "player": {"id": 122, "name": "asdf"}
+  "action":  "figure",
+  "data": {
+   "timeout": 20,
+   "size": {
+     "width": 2,
+     "height": 2
    }
- }
+   "pixels": [
+     {"x": 0, "y": 0}, 
+     {"x": 1, "y": 1}
+   ],
+   "points": 10
+  }
 }
 ```
 
-
-1. playerLogout
-```json
+##### dashboard
+```
 {
- "action": "playerLogout",
- "data": {
-   "player": {"id": 122}
+   "action":  "dashboard",
+   "data": {
+     "players": [
+       {"id": 122, "scpre": 20},
+       {"id": 123, "scpre": 15}
+     ]
    }
- }
 }
 ```
