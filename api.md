@@ -53,7 +53,7 @@ Request:
 Response:
 ```json
 {
-  "player": Player
+  "player": {}
 }
 ```
 
