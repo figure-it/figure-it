@@ -26,7 +26,7 @@ Figure
   - id: unsigned int 4 bytes
   - size: Size
   - pixels: String[] //Strings of '0's and '1's with length=size.width
-  - winPoints: unsigned int
+  - points: unsigned int
   
 
 ## Protocol
