@@ -42,14 +42,6 @@ Figure
 }
 ```
 
-
-##### GET /game/currentMap
-```json
-{
-
-}
-```
-
 ##### POST /game/authorize
 Request:
 ```json
