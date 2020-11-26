@@ -53,8 +53,7 @@ Request:
 Response:
 ```json
 {
-  "id": 122,
-  "color": {"red": 255, "green": 0, "blue": 0, "alpha": 0}
+  "player": Player
 }
 ```
 
