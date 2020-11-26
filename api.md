@@ -25,7 +25,7 @@ Map
 Figure
   - id: unsigned int 4 bytes
   - size: Size
-  - pixels: String[] //Strings of '0's and '1's with length=size.width
+  - image: String[] //Strings of '0's and '1's with length=size.width
   - points: unsigned int
   
 
@@ -111,7 +111,7 @@ Response:
      "width": 2,
      "height": 2
    }
-   "pixels": [
+   "image": [
      {"x": 0, "y": 0}, 
      {"x": 1, "y": 1}
    ],
