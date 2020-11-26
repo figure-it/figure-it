@@ -87,18 +87,16 @@ Response:
 {
  "action": "updates",
  "data": {
-   "updates": {
-     "players": [
-     {
-       "id": 1,
-       "position": [123, 9]
-     },
-     {
-       "id": 3,
-       "position": [121, 11]
-     }
-     ]
+   "playerPositions": [
+   {
+     "id": 1,
+     "position": [123, 9]
+   },
+   {
+     "id": 3,
+     "position": [121, 11]
    }
+   ]
  }
 }
 ```
