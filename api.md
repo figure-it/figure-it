@@ -47,7 +47,7 @@ Request:
 ```json
 {
   "name": "asdf",
-  "color": "red"
+  "color": {"red": 255, "green": 0, "blue": 0, "alpha": 0}
 }
 ```
 
