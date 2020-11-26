@@ -123,8 +123,8 @@ Response:
    "action":  "dashboard",
    "data": {
      "players": [
-       {"id": 122, "scpre": 20},
-       {"id": 123, "scpre": 15}
+       {"id": 122, "score": 20},
+       {"id": 123, "score": 15}
      ]
    }
 }
