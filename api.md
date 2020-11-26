@@ -111,10 +111,7 @@ Response:
      "width": 2,
      "height": 2
    }
-   "image": [
-     {"x": 0, "y": 0}, 
-     {"x": 1, "y": 1}
-   ],
+   "image": ["10", "01"],
    "points": 10
   }
 }
