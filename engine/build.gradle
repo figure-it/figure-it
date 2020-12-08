@@ -11,4 +11,11 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    testCompile 'org.testng:testng:7.1.0'
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+}
+
+test {
+    useTestNG()
 }
