@@ -26,3 +26,4 @@ hs_err_pid*
 */.gradle/
 /api/build/
 /server/build/
+/engine/build/
