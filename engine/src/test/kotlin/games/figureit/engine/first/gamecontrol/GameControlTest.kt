@@ -44,16 +44,17 @@ class GameControlTest
         gameControl.addPlayer()
         val players = gameControl.getAllPlayers()
         assertThat(players, hasSize(1))
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 1)))
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
     }
 
     @Test
     fun addTwoPlayers() {
         gameControl.addPlayer()
+        gameControl.addPlayer()
 
         val players = gameControl.getAllPlayers()
         assertThat(players, hasSize(2))
-        assertThat(players, hasItem(player(2, ON_MAP, 2, 1)))
+        assertThat(players, hasItem(player(2, ON_MAP, 1, 0)))
     }
 
     @Test
@@ -83,8 +84,9 @@ class GameControlTest
         gameControl.startTheWorld()
         gameControl.addPlayer()
         gameControl.stopTheWorld()
+        gameControl.startTheWorld()
         val players = gameControl.getAllPlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 1)))
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
     }
 
     /* MOVES PLAYERS */
@@ -92,37 +94,51 @@ class GameControlTest
     @Test
     fun movePlayerRight() {
         gameControl.addPlayer()
+        gameControl.startTheWorld()
         gameControl.move(1, RIGHT)
         val players = gameControl.getAllPlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 2, 1)))
+        assertThat(players, hasItem(player(1, ON_MAP, 1, 0)))
     }
 
     @Test
     fun movePlayerDown() {
         gameControl.addPlayer()
+        gameControl.startTheWorld()
         gameControl.move(1, DOWN)
         val players = gameControl.getAllPlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 2)))
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 1)))
     }
 
     @Test
     fun movePlayerToOccupiedPlace() {
         gameControl.addPlayer()
+        gameControl.addPlayer()
+        gameControl.startTheWorld()
         gameControl.move(1, RIGHT)
         val players = gameControl.getAllPlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 1)))
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
     }
 
     @Test
     fun movePlayerOverBorderOfMap() {
         gameControl.addPlayer()
+        gameControl.startTheWorld()
         gameControl.move(1, LEFT)
         val players = gameControl.getAllPlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 1)))
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
     }
 
+    @Test
+    fun movePlayerWithStoppedTimer() {
+        gameControl.addPlayer()
+        gameControl.move(1, RIGHT)
+        val players = gameControl.getAllPlayers()
+        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+    }
+
+
     companion object {
-        fun player(id: Int, state: PositionState, x: Int, y: Int): Player {
+        fun player(id: Long, state: PositionState, x: Int, y: Int): Player {
             return Player(
                 id = id,
                 position = Position(x, y),
@@ -136,7 +152,7 @@ class GameControlTest
         @JvmStatic
         fun gameControl(): Array<Array<() -> GameControl>> {
             return arrayOf(
-                arrayOf( { GameControlSynchronized(positionGenerator) } )
+                arrayOf( { GameControlSynchronized(positionGenerator, 20) } )
             )
         }
     }
