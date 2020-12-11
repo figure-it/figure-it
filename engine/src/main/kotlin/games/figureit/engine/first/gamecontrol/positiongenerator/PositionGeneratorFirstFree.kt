@@ -6,7 +6,7 @@ import games.figureit.engine.model.Size
 
 class PositionGeneratorFirstFree: PositionGenerator {
 
-    override fun generate(mapSize: Size, positions: List<Position>): Position {
+    override fun generate(mapSize: Size, positions: Collection<Position>): Position {
         var counter = 0
         do {
             val position = Position(counter % mapSize.width, counter / mapSize.width)
@@ -19,7 +19,7 @@ class PositionGeneratorFirstFree: PositionGenerator {
         throw RuntimeException("Not enough space")
     }
 
-    private fun pixelIsOccupied(testPosition: Position, positions: List<Position>): Boolean {
+    private fun pixelIsOccupied(testPosition: Position, positions: Collection<Position>): Boolean {
         for (position in positions) {
             if (testPosition == position) {
                 return true
