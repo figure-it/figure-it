@@ -13,7 +13,7 @@ class PositionGeneratorFirstFree: PositionGenerator {
             if (!pixelIsOccupied(position, positions)) {
                 return position
             }
-            counter++;
+            counter++
         } while (counter < mapSize.height * mapSize.width)
 
         throw RuntimeException("Not enough space")

@@ -9,6 +9,7 @@ import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState
 import games.figureit.engine.model.Size
+import java.util.HashMap
 
 class GameControlStopped(
     private val positionGenerator: PositionGenerator,

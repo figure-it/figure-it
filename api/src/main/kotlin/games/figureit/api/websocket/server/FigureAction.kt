@@ -1,6 +1,7 @@
 package games.figureit.api.websocket.server
 
-import it.figureit.api.websocket.FigureData
+import games.figureit.api.websocket.FigureData
+
 
 class FigureAction(
         val data: FigureData

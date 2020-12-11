@@ -7,6 +7,8 @@ import games.figureit.engine.model.Field
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Size
+import java.util.HashMap
+import java.util.HashSet
 
 class GameControlRunning(
     private val positionGenerator: PositionGenerator,
