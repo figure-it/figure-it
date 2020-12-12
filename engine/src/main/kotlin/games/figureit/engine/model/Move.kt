@@ -1,5 +1,7 @@
 package games.figureit.engine.model
 
+import games.figureit.engine.first.gamecontrol.Field
+
 enum class Move {
     LEFT {
         override fun move(field: Field, player: Player) {

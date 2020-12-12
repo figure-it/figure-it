@@ -1,4 +1,8 @@
-package games.figureit.engine.model
+package games.figureit.engine.first.gamecontrol
+
+import games.figureit.engine.model.Player
+import games.figureit.engine.model.Position
+import games.figureit.engine.model.Size
 
 class Field(width: Int, height: Int) {
     private val field: Array<Array<Player?>> = Array(height) { arrayOfNulls(width) }

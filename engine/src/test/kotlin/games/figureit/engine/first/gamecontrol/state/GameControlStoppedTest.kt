@@ -5,7 +5,7 @@ import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.PositionGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
-import games.figureit.engine.model.Field
+import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position

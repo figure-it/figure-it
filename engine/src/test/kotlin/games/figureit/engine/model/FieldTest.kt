@@ -1,5 +1,6 @@
 package games.figureit.engine.model
 
+import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import org.hamcrest.MatcherAssert.assertThat

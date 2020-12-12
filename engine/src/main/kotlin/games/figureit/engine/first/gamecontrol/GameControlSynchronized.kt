@@ -3,7 +3,6 @@ package games.figureit.engine.first.gamecontrol
 import games.figureit.engine.first.GameControl
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.state.GameControlStopped
-import games.figureit.engine.model.Field
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Size
