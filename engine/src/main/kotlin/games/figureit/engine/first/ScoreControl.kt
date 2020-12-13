@@ -1,5 +1,9 @@
 package games.figureit.engine.first
 
-interface ScoreControl {
+import games.figureit.engine.model.Figure
+
+interface ScoreControl: Runnable {
     fun start()
+    fun stop()
+    fun getFigure(): Figure
 }

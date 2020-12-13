@@ -7,36 +7,40 @@ import games.figureit.engine.model.Player
 import games.figureit.engine.model.Size
 
 class EngineV1Impl(
-    val playerControl: PlayerControl,
-    val mapControl: MapControl,
-    val scoreControl: ScoreControl
+    private val playerControl: PlayerControl,
+    private val mapControl: MapControl,
+    private val scoreControl: ScoreControl
 ) : Engine {
 
     override fun addPlayer(): Player {
-        TODO("Not yet implemented")
+        return playerControl.addPlayer()
+    }
+
+    override fun removePlayer(playerId: Long) {
+        playerControl.removePlayer(playerId)
     }
 
     override fun getAllPlayers(): List<Player> {
-        TODO("Not yet implemented")
+        return playerControl.getActivePlayers() + playerControl.getPendingPlayers()
     }
 
     override fun getCurrentFigure(): Figure {
-        TODO("Not yet implemented")
+        return scoreControl.getFigure()
     }
 
     override fun getMapSize(): Size {
-        TODO("Not yet implemented")
+        return mapControl.getMapSize()
     }
 
-    override fun move(playerId: Int, move: Move) {
-        TODO("Not yet implemented")
+    override fun move(playerId: Long, move: Move) {
+        mapControl.move(playerId, move)
     }
 
     override fun start() {
-        TODO("Not yet implemented")
+        scoreControl.start()
     }
 
     override fun stop() {
-        TODO("Not yet implemented")
+        scoreControl.stop()
     }
 }
