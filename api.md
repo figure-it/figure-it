@@ -2,7 +2,7 @@
 
 ## Objects:
 
-Pixel:
+Position:
   - x: signed int 4 bytes
   - y: signed int 4 bytes
   
@@ -12,7 +12,7 @@ Size:
 
 Player
   - id: unsigned int 4 bytes
-  - position: Pixel
+  - position: Position
   - name: String
   - color: Color
   - points: unsigned int 4 bytes
@@ -64,10 +64,10 @@ Response:
 ##### move
 ```json
 {
- "action": "move",
- "data": {
-   "move": "up"
- }
+  "action": "move",
+  "data": {
+    "move": "up"
+  }
 }
 ```
 
