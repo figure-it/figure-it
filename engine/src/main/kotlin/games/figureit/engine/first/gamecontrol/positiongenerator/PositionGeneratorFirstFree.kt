@@ -20,11 +20,6 @@ class PositionGeneratorFirstFree: PositionGenerator {
     }
 
     private fun pixelIsOccupied(testPosition: Position, positions: Collection<Position>): Boolean {
-        for (position in positions) {
-            if (testPosition == position) {
-                return true
-            }
-        }
-        return false
+        return positions.contains(testPosition)
     }
 }
