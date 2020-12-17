@@ -71,18 +71,25 @@ Response:
 }
 ```
 
-##### logout
+##### goActive - player wants to appear on map
 ```json
 {
- "action": "logout",
+ "action": "online",
  "data": {}
 }
 ```
 
+##### logout - player wants to disappear on map
+```json
+{
+ "action": "offline",
+ "data": {}
+}
+```
 
 #### from server to client
 
-##### updates
+##### updates - players move actions
 ```json
 {
  "action": "updates",
@@ -101,7 +108,7 @@ Response:
 }
 ```
 
-##### figure
+##### figure - task (figure) updated
 ```
 {
   "action":  "figure",
@@ -117,7 +124,7 @@ Response:
 }
 ```
 
-##### dashboard
+##### dashboard - dashboard updated
 ```
 {
    "action":  "dashboard",
@@ -129,3 +136,12 @@ Response:
    }
 }
 ```
+
+##### stopTheWorld - game pause
+//todo
+
+##### startTheWorld - game resume
+//todo
+
+##### winFigures - report which exact figures were collected as win-figures
+//todo
