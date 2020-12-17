@@ -1,0 +1,5 @@
+rootProject.name = 'figure-it'
+
+include 'api'
+include 'engine'
+include 'server'

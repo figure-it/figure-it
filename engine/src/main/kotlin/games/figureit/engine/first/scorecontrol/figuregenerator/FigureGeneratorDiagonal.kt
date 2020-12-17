@@ -7,18 +7,18 @@ import java.util.ArrayList
 
 class FigureGeneratorDiagonal: FigureGenerator {
     override fun generate(playersCount: Int): Figure {
-        val pixels = ArrayList<String>(playersCount)
-
-        for(i in 0 until playersCount) {
-            val s = "0".repeat(i) + "1" + "0".repeat(playersCount - i - 1)
+        val cnt = maxOf(2, playersCount)
+        val pixels = ArrayList<String>(cnt)
+        for(i in 0 until cnt) {
+            val s = "0".repeat(i) + "1" + "0".repeat(cnt - i - 1)
             pixels.add(s)
         }
 
         return Figure(
             id = 1,
-            size = Size(playersCount, playersCount),
+            size = Size(cnt, cnt),
             pixels = pixels,
-            points = playersCount
+            points = cnt
         )
     }
 }

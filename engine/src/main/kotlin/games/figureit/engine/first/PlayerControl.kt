@@ -4,5 +4,6 @@ import games.figureit.engine.model.Player
 
 interface PlayerControl : PlayerListStore {
     fun addPlayer(): Player
-    fun removePlayer(id: Long)
+    fun activatePlayer(id: Long)
+    fun deactivatePlayer(id: Long)
 }

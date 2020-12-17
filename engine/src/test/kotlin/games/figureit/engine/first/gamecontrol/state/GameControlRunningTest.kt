@@ -1,19 +1,19 @@
 package games.figureit.engine.first.gamecontrol.state
 
+import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.GameControlState
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.PositionGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
-import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.model.Move.DOWN
 import games.figureit.engine.model.Move.LEFT
 import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Move.UP
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
-import games.figureit.engine.model.PositionState.ON_MAP
-import games.figureit.engine.model.PositionState.PENDING
+import games.figureit.engine.model.PositionState.ACTIVE
+import games.figureit.engine.model.PositionState.INACTIVE
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -21,6 +21,7 @@ import org.hamcrest.Matchers.nullValue
 import org.hamcrest.Matchers.sameInstance
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
+import java.util.HashMap
 
 class GameControlRunningTest {
 
@@ -55,11 +56,12 @@ class GameControlRunningTest {
     @Test
     fun newPlayersArePending() {
         val gameState = createDefaultState()
-        gameState.addPlayer()
+        val p = gameState.addPlayer()
+        gameState.activatePlayer(p.id)
         val players = gameState.getPendingPlayers()
         assertThat(players, Matchers.hasSize(1))
         val state = players.stream().findAny().get().positionState
-        assertThat(state, equalTo(PENDING))
+        assertThat(state, equalTo(INACTIVE))
     }
 
     @Test
@@ -108,14 +110,14 @@ class GameControlRunningTest {
             positionGenerator = positionGenerator,
             playerGenerator = playerGenerator,
             field = field,
-            players = players
+            activePlayers = players
         )
     }
 
     private fun generatePlayerOnMap(x: Int, y: Int, field: Field): Player {
         val player = playerGenerator.generate()
         player.position = Position(x, y)
-        player.positionState = ON_MAP
+        player.positionState = ACTIVE
         field.set(x, y, player)
         return player
     }

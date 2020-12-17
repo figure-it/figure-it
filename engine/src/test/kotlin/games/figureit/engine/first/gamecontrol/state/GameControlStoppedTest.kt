@@ -9,7 +9,7 @@ import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGenerat
 import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
-import games.figureit.engine.model.PositionState.PENDING
+import games.figureit.engine.model.PositionState.INACTIVE
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasItem
@@ -44,11 +44,12 @@ class GameControlStoppedTest {
     @Test
     fun newPlayersHavePendingState() {
         val state = createDefaultState()
-        state.addPlayer()
+        val p = state.addPlayer()
+        state.activatePlayer(p.id)
         val players = state.getPendingPlayers()
         assertThat(players, hasSize(1))
         val playerState = players.stream().findAny().get().positionState
-        assertThat(playerState, equalTo(PENDING))
+        assertThat(playerState, equalTo(INACTIVE))
     }
 
     @Test
@@ -74,15 +75,16 @@ class GameControlStoppedTest {
     fun removePendingPlayer() {
         val gameState = createDefaultState()
         val player = gameState.addPlayer()
-        gameState.removePlayer(player.id)
+        gameState.deactivatePlayer(player.id)
         val players = gameState.getPendingPlayers()
-        assertThat(players, hasSize(0));
+        assertThat(players, hasSize(0))
     }
 
     @Test
     fun movePlayer() {
         val gameState = createDefaultState()
         val player = gameState.addPlayer()
+        gameState.activatePlayer(player.id)
         gameState.move(player.id, RIGHT)
 
         val players = gameState.getPendingPlayers()
@@ -102,7 +104,7 @@ class GameControlStoppedTest {
             positionGenerator = positionGenerator,
             playerGenerator = playerGenerator,
             field = field,
-            players = players,
+            activePlayers = players,
             playersToAdd = playersToAdd,
             playersToRemove = playersToRemove
         )
@@ -111,7 +113,7 @@ class GameControlStoppedTest {
     private fun generatePendingPlayer(): Player {
         val player = playerGenerator.generate()
         player.position = Position(0, 0)
-        player.positionState = PENDING
+        player.positionState = INACTIVE
         return player
     }
 

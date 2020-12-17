@@ -8,8 +8,8 @@ import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState
-import games.figureit.engine.model.PositionState.ON_MAP
-import games.figureit.engine.model.PositionState.PENDING
+import games.figureit.engine.model.PositionState.ACTIVE
+import games.figureit.engine.model.PositionState.INACTIVE
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.hasSize
@@ -47,31 +47,36 @@ class GameControlTest
 
     @Test
     fun addOnePlayer() {
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         val players = gameControl.getPendingPlayers()
         assertThat(players, hasSize(1))
-        assertThat(players, hasItem(player(1, PENDING, 0, 0)))
+        assertThat(players, hasItem(player(p.id, INACTIVE, 0, 0)))
     }
 
     @Test
     fun addTwoPlayers() {
-        gameControl.addPlayer()
-        gameControl.addPlayer()
+        val p1 = gameControl.addPlayer()
+        val p2 = gameControl.addPlayer()
+        gameControl.activatePlayer(p1.id)
+        gameControl.activatePlayer(p2.id)
 
         val players = gameControl.getPendingPlayers()
         assertThat(players, hasSize(2))
-        assertThat(players, hasItem(player(2, PENDING, 0, 0)))
+        assertThat(players, hasItem(player(2, INACTIVE, 0, 0)))
     }
 
     @Test
     fun addTwoPlayersActive() {
-        gameControl.addPlayer()
-        gameControl.addPlayer()
+        val p1 = gameControl.addPlayer()
+        val p2 = gameControl.addPlayer()
+        gameControl.activatePlayer(p1.id)
+        gameControl.activatePlayer(p2.id)
         gameControl.startTheWorld()
 
         val players = gameControl.getActivePlayers()
         assertThat(players, hasSize(2))
-        assertThat(players, hasItem(player(2, ON_MAP, 1, 0)))
+        assertThat(players, hasItem(player(2, ACTIVE, 1, 0)))
     }
 
     @Test
@@ -89,8 +94,8 @@ class GameControlTest
         gameControl.addPlayer()
         gameControl.addPlayer()
 
-        gameControl.removePlayer(1)
-        gameControl.removePlayer(2)
+        gameControl.deactivatePlayer(1)
+        gameControl.deactivatePlayer(2)
 
         val players = gameControl.getActivePlayers()
         assertThat(players, hasSize(0))
@@ -101,68 +106,76 @@ class GameControlTest
     @Test
     fun addPlayerAfterStartTheWorld() {
         gameControl.startTheWorld()
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         val players = gameControl.getPendingPlayers()
-        assertThat(players, hasItem(player(1, PENDING, 0, 0)))
+        assertThat(players, hasItem(player(p.id, INACTIVE, 0, 0)))
     }
 
     @Test
     fun playerAddedAfterStopTheWorld() {
         gameControl.startTheWorld()
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         gameControl.stopTheWorld()
         gameControl.startTheWorld()
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+        assertThat(players, hasItem(player(p.id, ACTIVE, 0, 0)))
     }
 
     /* MOVES PLAYERS */
 
     @Test
     fun movePlayerRight() {
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         gameControl.startTheWorld()
-        gameControl.move(1, RIGHT)
+        gameControl.move(p.id, RIGHT)
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 1, 0)))
+        assertThat(players, hasItem(player(p.id, ACTIVE, 1, 0)))
     }
 
     @Test
     fun movePlayerDown() {
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         gameControl.startTheWorld()
-        gameControl.move(1, DOWN)
+        gameControl.move(p.id, DOWN)
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 1)))
+        assertThat(players, hasItem(player(p.id, ACTIVE, 0, 1)))
     }
 
     @Test
     fun movePlayerToOccupiedPlace() {
-        gameControl.addPlayer()
-        gameControl.addPlayer()
+        val p1 = gameControl.addPlayer()
+        val p2 = gameControl.addPlayer()
+        gameControl.activatePlayer(p1.id)
+        gameControl.activatePlayer(p2.id)
         gameControl.startTheWorld()
-        gameControl.move(1, RIGHT)
+        gameControl.move(p1.id, RIGHT)
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+        assertThat(players, hasItem(player(p1.id, ACTIVE, 0, 0)))
     }
 
     @Test
     fun movePlayerOverBorderOfMap() {
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         gameControl.startTheWorld()
-        gameControl.move(1, LEFT)
+        gameControl.move(p.id, LEFT)
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+        assertThat(players, hasItem(player(p.id, ACTIVE, 0, 0)))
     }
 
     @Test
     fun movePlayerWithStoppedTimer() {
-        gameControl.addPlayer()
+        val p = gameControl.addPlayer()
+        gameControl.activatePlayer(p.id)
         gameControl.startTheWorld()
         gameControl.stopTheWorld()
-        gameControl.move(1, RIGHT)
+        gameControl.move(p.id, RIGHT)
         val players = gameControl.getActivePlayers()
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+        assertThat(players, hasItem(player(p.id, ACTIVE, 0, 0)))
     }
 
 

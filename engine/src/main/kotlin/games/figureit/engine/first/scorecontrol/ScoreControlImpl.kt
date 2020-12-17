@@ -42,6 +42,9 @@ class ScoreControlImpl(
         val players = playerListStore.getActivePlayers()
         val checker = FigureChecker(players, currentFigure)
         checker.checkAndReward()
+        val playersTotal = players + playerListStore.getPendingPlayers()
+        val playerCount = playersTotal.size
+        currentFigure = figureGenerator.generate(playerCount)
         timerControl.startTheWorld()
     }
 
@@ -53,6 +56,9 @@ class ScoreControlImpl(
         private val positionsWithPlayers = players.map { it.position to it } . toMap()
 
         fun checkAndReward() {
+            if (players.isEmpty()) {
+                return
+            }
             val minX = players.minOf { it.position.x }
             val minY = players.minOf { it.position.y }
             val maxX = players.maxOf { it.position.x }
@@ -69,7 +75,6 @@ class ScoreControlImpl(
                     }
                 }
             }
-
         }
 
         private fun detectFigureAt(figurePosition: Position): Boolean {

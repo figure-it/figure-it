@@ -28,14 +28,18 @@ class GameControlSynchronized(
         return currentState.addPlayer()
     }
 
+    override fun activatePlayer(id: Long) {
+        return currentState.activatePlayer(id)
+    }
+
     @Synchronized
     override fun getMapSize(): Size {
         return currentState.getMapSize()
     }
 
     @Synchronized
-    override fun removePlayer(id: Long) {
-        return currentState.removePlayer(id)
+    override fun deactivatePlayer(id: Long) {
+        return currentState.deactivatePlayer(id)
     }
 
     @Synchronized
@@ -46,6 +50,10 @@ class GameControlSynchronized(
     @Synchronized
     override fun getPendingPlayers(): Collection<Player> {
         return currentState.getPendingPlayers()
+    }
+
+    override fun getAllPlayers(): Collection<Player> {
+        return currentState.getAllPlayers()
     }
 
     @Synchronized
