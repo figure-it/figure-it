@@ -48,9 +48,9 @@ class GameControlTest
     @Test
     fun addOnePlayer() {
         gameControl.addPlayer()
-        val players = gameControl.getActivePlayers()
+        val players = gameControl.getPendingPlayers()
         assertThat(players, hasSize(1))
-        assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))
+        assertThat(players, hasItem(player(1, PENDING, 0, 0)))
     }
 
     @Test
@@ -58,10 +58,31 @@ class GameControlTest
         gameControl.addPlayer()
         gameControl.addPlayer()
 
+        val players = gameControl.getPendingPlayers()
+        assertThat(players, hasSize(2))
+        assertThat(players, hasItem(player(2, PENDING, 0, 0)))
+    }
+
+    @Test
+    fun addTwoPlayersActive() {
+        gameControl.addPlayer()
+        gameControl.addPlayer()
+        gameControl.startTheWorld()
+
         val players = gameControl.getActivePlayers()
         assertThat(players, hasSize(2))
         assertThat(players, hasItem(player(2, ON_MAP, 1, 0)))
     }
+
+    @Test
+    fun addPlayersMoveToActiveAfterStart() {
+        gameControl.addPlayer()
+        gameControl.startTheWorld()
+
+        val players = gameControl.getPendingPlayers()
+        assertThat(players, hasSize(0))
+    }
+
 
     @Test
     fun removeToZero() {
@@ -137,6 +158,8 @@ class GameControlTest
     @Test
     fun movePlayerWithStoppedTimer() {
         gameControl.addPlayer()
+        gameControl.startTheWorld()
+        gameControl.stopTheWorld()
         gameControl.move(1, RIGHT)
         val players = gameControl.getActivePlayers()
         assertThat(players, hasItem(player(1, ON_MAP, 0, 0)))

@@ -12,20 +12,18 @@ import java.util.HashSet
 
 class GameControlRunning(
     private val positionGenerator: PositionGenerator,
-    private val playerGenerator: PlayerGenerator,
     private val field: Field,
-    private val players: MutableMap<Long, Player> = HashMap()
-): GameControlState {
-
-    private val pendingAddPlayers: MutableMap<Long, Player> = HashMap()
+    private val playerGenerator: PlayerGenerator,
+    private val players: MutableMap<Long, Player> = HashMap(),
+    private val pendingAddPlayers: MutableMap<Long, Player> = HashMap(),
     private val pendingRemovePlayers: MutableSet<Long> = HashSet()
-
+): GameControlStateAbstract(playerGenerator, players, pendingAddPlayers, pendingRemovePlayers) {
     override fun stopTheWorld(): GameControlState {
         return GameControlStopped(
             positionGenerator = positionGenerator,
             playerGenerator = playerGenerator,
             field = field,
-            playersToAdd = pendingAddPlayers.values.toSet(),
+            playersToAdd = pendingAddPlayers,
             playersToRemove = pendingRemovePlayers,
             players = players
         )
@@ -43,30 +41,6 @@ class GameControlRunning(
 
     override fun getMapSize(): Size {
         return field.getSize()
-    }
-
-    override fun addPlayer(): Player {
-        val player = playerGenerator.generate()
-        pendingAddPlayers[player.id] = player
-        return player
-    }
-
-    override fun removePlayer(id: Long) {
-        if (pendingAddPlayers[id] != null) {
-            pendingAddPlayers.remove(id)
-            return
-        }
-        if (players.containsKey(id)) {
-            pendingRemovePlayers.add(id)
-        }
-    }
-
-    override fun getActivePlayers(): Collection<Player> {
-        return players.values
-    }
-
-    override fun getPendingPlayers(): Collection<Player> {
-        return pendingAddPlayers.values
     }
 
 }

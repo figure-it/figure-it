@@ -16,27 +16,28 @@ class GameControlStopped(
     private val playerGenerator: PlayerGenerator,
     private val field: Field,
     private val players: MutableMap<Long, Player> = HashMap(),
-
-    playersToAdd: Set<Player> = emptySet(),
-    playersToRemove: Set<Long> = emptySet()
-): GameControlState {
-
-    init {
-        for (playerId in playersToRemove) {
-            removePlayer(playerId)
-        }
-        val currentPositions = players.values.map { it.position } .toMutableList()
-        for (playerId in playersToAdd) {
-            currentPositions.add(addPlayer(playerId, currentPositions))
-        }
-    }
+    private val playersToAdd: MutableMap<Long, Player> = mutableMapOf(),
+    private val playersToRemove: MutableSet<Long> = mutableSetOf()
+): GameControlStateAbstract(playerGenerator, players, playersToAdd, playersToRemove) {
 
     override fun stopTheWorld(): GameControlState {
         return this
     }
 
     override fun startTheWorld(): GameControlState {
-        return GameControlRunning(positionGenerator, playerGenerator, field, players)
+        for (playerId in playersToRemove) {
+            val player = players[playerId]
+            player?.let {
+                val position = it.position
+                field.set(position, null)
+                players.remove(playerId)
+            }
+        }
+        val currentPositions = players.values.map { it.position } .toMutableList()
+        for (playerId in playersToAdd.values) {
+            currentPositions.add(addPlayer(playerId, currentPositions))
+        }
+        return GameControlRunning(positionGenerator, field, playerGenerator, players)
     }
 
     override fun move(playerId: Long, move: Move) {
@@ -47,12 +48,6 @@ class GameControlStopped(
         return field.getSize()
     }
 
-    override fun addPlayer(): Player {
-        val player = playerGenerator.generate()
-        addPlayer(player, players.values.map { it.position } . toList())
-        return player
-    }
-
     private fun addPlayer(player: Player, currentPositions: Collection<Position>): Position {
         val position = positionGenerator.generate(field.getSize(), currentPositions)
         player.position = position
@@ -60,23 +55,6 @@ class GameControlStopped(
         field.set(position, player)
         players[player.id] = player
         return position
-    }
-
-    override fun removePlayer(id: Long) {
-        val player = players[id]
-        player?.let {
-            val position = it.position
-            field.set(position, null)
-            players.remove(id)
-        }
-    }
-
-    override fun getActivePlayers(): Collection<Player> {
-        return players.values
-    }
-
-    override fun getPendingPlayers(): Collection<Player> {
-        return emptyList()
     }
 
 }
