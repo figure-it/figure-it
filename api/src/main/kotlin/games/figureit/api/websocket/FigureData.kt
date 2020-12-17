@@ -1,6 +1,6 @@
 package games.figureit.api.websocket
 
-import it.figureit.api.Size
+import games.figureit.api.Size
 
 data class FigureData(
         val timeout: Int,
