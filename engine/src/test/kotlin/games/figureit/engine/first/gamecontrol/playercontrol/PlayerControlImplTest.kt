@@ -33,7 +33,7 @@ class PlayerControlImplTest {
 
     @Test
     fun addNoPlayerPending() {
-        val players = playerControl.getPendingPlayers()
+        val players = playerControl.getPendingAddPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(0))
     }
 
@@ -41,7 +41,7 @@ class PlayerControlImplTest {
     fun addOnePlayer() {
         val p = playerControl.addPlayer()
         playerControl.activatePlayer(p.id)
-        val players = playerControl.getPendingPlayers()
+        val players = playerControl.getPendingAddPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(1))
         MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, INACTIVE, 0, 0)))
     }
@@ -53,7 +53,7 @@ class PlayerControlImplTest {
         playerControl.activatePlayer(p1.id)
         playerControl.activatePlayer(p2.id)
 
-        val players = playerControl.getPendingPlayers()
+        val players = playerControl.getPendingAddPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(2))
         MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(2, INACTIVE, 0, 0)))
     }
@@ -76,7 +76,7 @@ class PlayerControlImplTest {
         playerControl.addPlayer()
         playerControl.submitPreparations(field)
 
-        val players = playerControl.getPendingPlayers()
+        val players = playerControl.getPendingAddPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(0))
     }
 
@@ -99,7 +99,7 @@ class PlayerControlImplTest {
         playerControl.submitPreparations(field)
         val p = playerControl.addPlayer()
         playerControl.activatePlayer(p.id)
-        val players = playerControl.getPendingPlayers()
+        val players = playerControl.getPendingAddPlayers()
         MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, INACTIVE, 0, 0)))
     }
 

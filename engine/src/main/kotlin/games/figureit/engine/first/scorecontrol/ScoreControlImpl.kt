@@ -8,6 +8,8 @@ import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
+import java.lang.IllegalStateException
+import java.lang.Thread.sleep
 import java.util.ArrayList
 
 class ScoreControlImpl(
@@ -20,7 +22,7 @@ class ScoreControlImpl(
     private lateinit var currentFigure: Figure
 
     override fun start() {
-        val players = playerListStore.getActivePlayers() + playerListStore.getPendingPlayers()
+        val players = playerListStore.getActivePlayers() + playerListStore.getPendingAddPlayers()
         val playerCount = players.size
         currentFigure = figureGenerator.generate(playerCount)
         timerControl.startTheWorld()
@@ -41,13 +43,17 @@ class ScoreControlImpl(
 
     override fun run() {
         timerControl.stopTheWorld()
+        sleep(100)
         val players = playerListStore.getActivePlayers()
         val checker = FigureChecker(players, currentFigure, taskUpdateListener)
         checker.checkAndReward()
-        val playersTotal = players + playerListStore.getPendingPlayers()
-        val playerCount = playersTotal.size
-        currentFigure = figureGenerator.generate(playerCount)
+        sleep(100)
+        val playersCurrent = players.size
+        val playersToAdd = playerListStore.getPendingAddPlayers().size
+        val playersToRemove = playerListStore.getPendingRemovePlayers().size
+        currentFigure = figureGenerator.generate(playersCurrent + playersToAdd - playersToRemove)
         taskUpdateListener.taskUpdated(currentFigure)
+        sleep(100)
         timerControl.startTheWorld()
     }
 

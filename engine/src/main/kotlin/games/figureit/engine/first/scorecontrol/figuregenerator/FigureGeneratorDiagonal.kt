@@ -21,7 +21,8 @@ class FigureGeneratorDiagonal : FigureGenerator {
             id = counter.getAndIncrement(),
             size = Size(cnt, cnt),
             pixels = pixels,
-            points = cnt
+            points = cnt,
+            timeout = 20
         )
     }
 }
