@@ -2,32 +2,18 @@ package games.figureit.engine.first.gamecontrol.state
 
 import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.GameControlState
-import games.figureit.engine.first.gamecontrol.PlayerGenerator
-import games.figureit.engine.first.gamecontrol.PositionGenerator
+import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.model.Move
-import games.figureit.engine.model.Player
 import games.figureit.engine.model.Size
-import java.util.HashMap
-import java.util.HashSet
 
 class GameControlRunning(
-    private val positionGenerator: PositionGenerator,
     private val field: Field,
-    private val playerGenerator: PlayerGenerator,
-    private val activePlayers: MutableMap<Long, Player> = HashMap(),
-    private val pendingAddPlayers: MutableMap<Long, Player> = HashMap(),
-    private val pendingRemovePlayers: MutableSet<Long> = HashSet(),
-    private val allPlayers: MutableMap<Long, Player> = HashMap()
-): GameControlStateAbstract(playerGenerator, activePlayers, pendingAddPlayers, pendingRemovePlayers, allPlayers) {
+    private val playerControl: PlayerControl
+): GameControlState {
     override fun stopTheWorld(): GameControlState {
         return GameControlStopped(
-            positionGenerator = positionGenerator,
-            playerGenerator = playerGenerator,
             field = field,
-            playersToAdd = pendingAddPlayers,
-            playersToRemove = pendingRemovePlayers,
-            activePlayers = activePlayers,
-            allPlayers = allPlayers
+            playerControl = playerControl,
         )
     }
 
@@ -36,7 +22,7 @@ class GameControlRunning(
     }
 
     override fun move(playerId: Long, move: Move) {
-        activePlayers[playerId] ?. let {
+        playerControl.getActivePlayer(playerId) ?. let {
             move.move(field, it)
         }
     }
@@ -44,5 +30,4 @@ class GameControlRunning(
     override fun getMapSize(): Size {
         return field.getSize()
     }
-
 }

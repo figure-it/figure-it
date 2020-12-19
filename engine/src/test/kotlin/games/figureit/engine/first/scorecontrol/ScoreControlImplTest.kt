@@ -1,6 +1,7 @@
 package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
+import games.figureit.engine.first.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
@@ -10,9 +11,9 @@ import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState.ACTIVE
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.mock
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -23,21 +24,24 @@ class ScoreControlImplTest {
     private lateinit var playerGenerator: PlayerGenerator
     private lateinit var playerListStore: PlayerListStore
     private lateinit var scoreScheduler: ScoreScheduler
+    private lateinit var taskUpdateListener: TaskUpdateListener
 
     @BeforeMethod
     fun setUp() {
-        timerControl = Mockito.mock(TimerControl::class.java)
-        figureGenerator = Mockito.mock(FigureGenerator::class.java)
-        playerListStore = Mockito.mock(PlayerListStore::class.java)
+        timerControl = mock(TimerControl::class.java)
+        figureGenerator = mock(FigureGenerator::class.java)
+        playerListStore = mock(PlayerListStore::class.java)
         playerGenerator = PlayerGeneratorImpl()
-        scoreScheduler = Mockito.mock(ScoreScheduler::class.java)
+        scoreScheduler = mock(ScoreScheduler::class.java)
+        taskUpdateListener = mock(TaskUpdateListener::class.java)
     }
 
     @Test
     fun testWithoutPlayers() {
         `when`(playerListStore.getActivePlayers()).thenReturn(emptyList())
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore, figureGenerator, scoreScheduler)
+        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
+            figureGenerator, scoreScheduler, taskUpdateListener)
         scoreControl.start()
         scoreControl.run()
     }
@@ -48,7 +52,8 @@ class ScoreControlImplTest {
         val p2 = generatePlayer(1, 0)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore, figureGenerator, scoreScheduler)
+        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
+            figureGenerator, scoreScheduler, taskUpdateListener)
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(0))
@@ -62,7 +67,8 @@ class ScoreControlImplTest {
         val p3 = generatePlayer(2, 2)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2, p3))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore, figureGenerator, scoreScheduler)
+        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
+            figureGenerator, scoreScheduler, taskUpdateListener)
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(2))
@@ -77,7 +83,8 @@ class ScoreControlImplTest {
         val p3 = generatePlayer(2, 2)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2, p3))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore, figureGenerator, scoreScheduler)
+        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
+            figureGenerator, scoreScheduler, taskUpdateListener)
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(2))

@@ -3,7 +3,12 @@ package games.figureit.engine
 import games.figureit.engine.first.EngineV1Impl
 import games.figureit.engine.first.GameControl
 import games.figureit.engine.first.ScoreControl
+import games.figureit.engine.first.TaskUpdateListener
 import games.figureit.engine.first.gamecontrol.GameControlSynchronized
+import games.figureit.engine.first.gamecontrol.PlayerControl
+import games.figureit.engine.first.gamecontrol.PlayerGenerator
+import games.figureit.engine.first.gamecontrol.playercontrol.PlayerControlImpl
+import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
 import games.figureit.engine.first.scorecontrol.FigureGenerator
 import games.figureit.engine.first.scorecontrol.ScoreControlImpl
@@ -31,15 +36,27 @@ class EngineV1Test {
     private lateinit var gameControl: GameControl
     private lateinit var scoreControl: ScoreControl
     private lateinit var figureGenerator: FigureGenerator
+    private lateinit var playerGenerator: PlayerGenerator
+    private lateinit var playerControl: PlayerControl
     private lateinit var scoreScheduler: ScoreSchedulerManual
+    private lateinit var taskUpdateListener: TaskUpdateListener
 
     @BeforeMethod
     fun beforeEach() {
         scoreScheduler = ScoreSchedulerManual()
+        playerGenerator = PlayerGeneratorImpl()
         figureGenerator  = mock(FigureGenerator::class.java)
-        gameControl = GameControlSynchronized(PositionGeneratorFirstFree(), 50)
-        scoreControl = ScoreControlImpl(gameControl, gameControl, figureGenerator, scoreScheduler)
-        engine = EngineV1Impl(gameControl, gameControl, scoreControl)
+        taskUpdateListener = mock(TaskUpdateListener::class.java)
+        playerControl = PlayerControlImpl(playerGenerator, PositionGeneratorFirstFree())
+        gameControl = GameControlSynchronized(playerControl, 50)
+        scoreControl = ScoreControlImpl(
+            timerControl = gameControl,
+            playerListStore = playerControl,
+            figureGenerator = figureGenerator,
+            scoreScheduler = scoreScheduler,
+            taskUpdateListener = taskUpdateListener
+        )
+        engine = EngineV1Impl(playerControl, gameControl, scoreControl)
     }
 
     @Test

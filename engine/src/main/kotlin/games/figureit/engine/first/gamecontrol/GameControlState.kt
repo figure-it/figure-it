@@ -1,9 +1,8 @@
 package games.figureit.engine.first.gamecontrol
 
 import games.figureit.engine.first.MapControl
-import games.figureit.engine.first.PlayerControl
 
-interface GameControlState: MapControl, PlayerControl {
+interface GameControlState: MapControl {
     fun stopTheWorld(): GameControlState
     fun startTheWorld(): GameControlState
 }

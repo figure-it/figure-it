@@ -2,6 +2,7 @@ package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
 import games.figureit.engine.first.ScoreControl
+import games.figureit.engine.first.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Player
@@ -13,7 +14,8 @@ class ScoreControlImpl(
     private val timerControl: TimerControl,
     private val playerListStore: PlayerListStore,
     private val figureGenerator: FigureGenerator,
-    private val scoreScheduler: ScoreScheduler
+    private val scoreScheduler: ScoreScheduler,
+    private val taskUpdateListener: TaskUpdateListener
 ): ScoreControl {
     private lateinit var currentFigure: Figure
 
@@ -32,7 +34,7 @@ class ScoreControlImpl(
 
     override fun getFigure(): Figure {
         if (!this::currentFigure.isInitialized) {
-            throw IllegalStateException("Cannot retreive figure without first start")
+            throw IllegalStateException("Cannot retrieve figure without first start")
         }
         return currentFigure
     }
@@ -40,17 +42,19 @@ class ScoreControlImpl(
     override fun run() {
         timerControl.stopTheWorld()
         val players = playerListStore.getActivePlayers()
-        val checker = FigureChecker(players, currentFigure)
+        val checker = FigureChecker(players, currentFigure, taskUpdateListener)
         checker.checkAndReward()
         val playersTotal = players + playerListStore.getPendingPlayers()
         val playerCount = playersTotal.size
         currentFigure = figureGenerator.generate(playerCount)
+        taskUpdateListener.taskUpdated(currentFigure)
         timerControl.startTheWorld()
     }
 
     private class FigureChecker(
         private val players: Collection<Player>,
-        private val figure: Figure
+        private val figure: Figure,
+        private val taskUpdateListener: TaskUpdateListener
     ) {
         private val figurePixels: List<Position> = positionsOfFigurePixels()
         private val positionsWithPlayers = players.map { it.position to it } . toMap()
@@ -87,9 +91,15 @@ class ScoreControlImpl(
         }
 
         private fun addScoresForFigureAt(figurePosition: Position) {
+            val awardedPlayers: MutableList<Long> = ArrayList()
             for (pixelPosition in figurePixels) {
-                positionsWithPlayers[figurePosition.add(pixelPosition)]!!.score += figure.points
+                val player = positionsWithPlayers[figurePosition.add(pixelPosition)]
+                player ?. let {
+                    it.score += figure.points
+                    awardedPlayers.add(it.id)
+                }
             }
+            taskUpdateListener.taskCompleted(figure, figurePosition, awardedPlayers)
         }
 
         private fun positionsOfFigurePixels(): List<Position> {
