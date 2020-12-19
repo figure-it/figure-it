@@ -4,5 +4,6 @@ data class Figure(
     val id: Long,
     val size: Size,
     val pixels: List<String>,
-    val points: Int
+    val points: Int,
+    val timeout: Int
 )

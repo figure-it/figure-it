@@ -9,7 +9,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-configuration-processor"
 
-//    compile "om.fasterxml.jackson.core:jackson-core:2.10.2"
-//    compile "om.fasterxml.jackson.core:jackson-databind:2.10.2"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
+
+    testCompile 'org.testng:testng:7.1.0'
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+}
+
+test {
+    useTestNG()
 }
