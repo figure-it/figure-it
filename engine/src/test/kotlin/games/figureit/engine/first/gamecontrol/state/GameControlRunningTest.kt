@@ -13,8 +13,10 @@ import games.figureit.engine.model.Move.LEFT
 import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Move.UP
 import games.figureit.engine.model.Position
+import games.figureit.engine.model.Size
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.nullValue
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -24,12 +26,13 @@ class GameControlRunningTest {
     private lateinit var playerControl: PlayerControl
     private lateinit var state: GameControlState
     private lateinit var field: Field
+    private val defaultSize = Size(5, 5)
 
     @BeforeMethod
     fun beforeEach() {
         val positionGenerator: PositionGenerator = PositionGeneratorFirstFree()
         val playerGenerator: PlayerGenerator = PlayerGeneratorImpl()
-        field = Field(5, 5)
+        field = Field(defaultSize.width, defaultSize.height)
         playerControl = PlayerControlImpl(playerGenerator, positionGenerator)
         state = GameControlRunning(field, playerControl)
     }
@@ -71,6 +74,24 @@ class GameControlRunningTest {
         assertThat(actual2.position, equalTo(Position(0,0)))
         assertThat(field.playerAt(1, 0)!!.id, equalTo(player1.id))
         assertThat(field.playerAt(0, 0)!!.id, equalTo(player2.id))
+    }
+
+    @Test
+    fun startTheWorld() {
+        val actual = state.startTheWorld()
+        assertThat(actual, equalTo(state))
+    }
+
+    @Test
+    fun stopTheWorld() {
+        val actual = state.stopTheWorld()
+        assertThat(actual, instanceOf(GameControlStopped::class.java))
+    }
+
+    @Test
+    fun size() {
+        val actual = state.getMapSize()
+        assertThat(actual, equalTo(defaultSize))
     }
 
 }

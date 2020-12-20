@@ -1,7 +1,7 @@
 package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
-import games.figureit.engine.first.TaskUpdateListener
+import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl

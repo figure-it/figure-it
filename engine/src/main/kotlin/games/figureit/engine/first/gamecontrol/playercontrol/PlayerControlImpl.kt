@@ -4,7 +4,10 @@ import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.PositionGenerator
+import games.figureit.engine.first.listener.EmptyPlayerUpdateListener
+import games.figureit.engine.first.listener.PlayerUpdateListener
 import games.figureit.engine.model.Player
+import games.figureit.engine.model.PlayerDto
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState
 import java.util.HashMap
@@ -13,6 +16,7 @@ import java.util.HashSet
 class PlayerControlImpl(
     private val playerGenerator: PlayerGenerator,
     private val positionGenerator: PositionGenerator,
+    private val playerUpdateListener: PlayerUpdateListener = EmptyPlayerUpdateListener(),
     private val allPlayers: MutableMap<Long, Player> = HashMap()
 ): PlayerControl {
 
@@ -43,6 +47,7 @@ class PlayerControlImpl(
                 val position = it.position
                 field.set(position, null)
                 activePlayers.remove(playerId)
+                playerUpdateListener.playerDeactivated(it.id)
             }
         }
         pendingRemovePlayers.clear()
@@ -75,6 +80,7 @@ class PlayerControlImpl(
         player.positionState = PositionState.ACTIVE
         field.set(position, player)
         activePlayers[player.id] = player
+        playerUpdateListener.playerActivated(PlayerDto(player))
         return position
     }
 }

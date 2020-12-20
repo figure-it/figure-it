@@ -1,8 +1,5 @@
 package games.figureit.engine
 
-import games.figureit.engine.first.PlayerUpdateListener
-import games.figureit.engine.first.TaskUpdateListener
-import games.figureit.engine.first.WorldStateListener
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.PlayerDto

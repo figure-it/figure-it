@@ -11,7 +11,9 @@ import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState
 import games.figureit.engine.model.PositionState.ACTIVE
+import games.figureit.engine.model.Size
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasItem
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -22,18 +24,14 @@ class GameControlTest {
     private val positionGenerator = PositionGeneratorFirstFree()
     private lateinit var gameControl: GameControl
     private lateinit var playerControl: PlayerControl
+    private val mapSide = 20
+    private val defaultSize = Size(mapSide, mapSide)
 
     @BeforeMethod
     fun beforeEach() {
         playerControl = PlayerControlImpl(PlayerGeneratorImpl(), positionGenerator)
-        gameControl = GameControlSynchronized(playerControl, 20)
+        gameControl = GameControlSynchronized(playerControl, mapSide)
     }
-
-    /* ADD AND DELETE PLAYERS */
-
-
-
-    /* MOVES PLAYERS */
 
     @Test
     fun movePlayerRight() {
@@ -86,6 +84,12 @@ class GameControlTest {
         gameControl.move(p.id, RIGHT)
         val players = playerControl.getActivePlayers()
         assertThat(players, hasItem(player(p.id, ACTIVE, 0, 0)))
+    }
+
+    @Test
+    fun mapSize() {
+        val mapSize = gameControl.getMapSize()
+        assertThat(mapSize, equalTo(defaultSize))
     }
 
 

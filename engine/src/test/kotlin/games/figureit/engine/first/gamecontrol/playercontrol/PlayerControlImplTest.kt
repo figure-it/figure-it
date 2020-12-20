@@ -6,7 +6,8 @@ import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
-import games.figureit.engine.model.PositionState
+import games.figureit.engine.model.PositionState.ACTIVE
+import games.figureit.engine.model.PositionState.INACTIVE
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.testng.annotations.BeforeMethod
@@ -42,7 +43,7 @@ class PlayerControlImplTest {
         playerControl.activatePlayer(p.id)
         val players = playerControl.getPendingPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(1))
-        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, PositionState.INACTIVE, 0, 0)))
+        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, INACTIVE, 0, 0)))
     }
 
     @Test
@@ -54,7 +55,7 @@ class PlayerControlImplTest {
 
         val players = playerControl.getPendingPlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(2))
-        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(2, PositionState.INACTIVE, 0, 0)))
+        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(2, INACTIVE, 0, 0)))
     }
 
     @Test
@@ -67,7 +68,7 @@ class PlayerControlImplTest {
 
         val players = playerControl.getActivePlayers()
         MatcherAssert.assertThat(players, Matchers.hasSize(2))
-        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(2, PositionState.ACTIVE, 1, 0)))
+        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(2, ACTIVE, 1, 0)))
     }
 
     @Test
@@ -100,7 +101,7 @@ class PlayerControlImplTest {
         val p = playerControl.addPlayer()
         playerControl.activatePlayer(p.id)
         val players = playerControl.getPendingPlayers()
-        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, PositionState.INACTIVE, 0, 0)))
+        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, INACTIVE, 0, 0)))
     }
 
     @Test
@@ -110,7 +111,7 @@ class PlayerControlImplTest {
         playerControl.activatePlayer(p.id)
         playerControl.submitPreparations(field)
         val players = playerControl.getActivePlayers()
-        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, PositionState.ACTIVE, 0, 0)))
+        MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, ACTIVE, 0, 0)))
     }
 
 }

@@ -2,8 +2,9 @@ package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
 import games.figureit.engine.first.ScoreControl
-import games.figureit.engine.first.TaskUpdateListener
+import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
+import games.figureit.engine.first.listener.EmptyTaskUpdateListener
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
@@ -15,7 +16,7 @@ class ScoreControlImpl(
     private val playerListStore: PlayerListStore,
     private val figureGenerator: FigureGenerator,
     private val scoreScheduler: ScoreScheduler,
-    private val taskUpdateListener: TaskUpdateListener
+    private val taskUpdateListener: TaskUpdateListener = EmptyTaskUpdateListener()
 ): ScoreControl {
     private lateinit var currentFigure: Figure
 

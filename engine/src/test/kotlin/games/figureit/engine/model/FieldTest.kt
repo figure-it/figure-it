@@ -40,6 +40,13 @@ class FieldTest {
     }
 
     @Test
+    fun testPlayerAtByPosition() {
+        val p = generatePlayer()
+        field.set(0,0, p)
+        assertThat(field.playerAt(Position(0, 0)), sameInstance(p))
+    }
+
+    @Test
     fun testLeftAcrossZeroBorder() {
         val actual = field.leftFor(Position(0,10))
         assertThat(actual, equalTo(Position(0, 10)))

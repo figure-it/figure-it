@@ -1,9 +1,11 @@
 package games.figureit.engine.first.gamecontrol.state
 
+import games.figureit.engine.exception.ActivePlayerNotFoundException
 import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.GameControlState
 import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.model.Move
+import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
 
 class GameControlStopped(
@@ -23,8 +25,12 @@ class GameControlStopped(
         )
     }
 
-    override fun move(playerId: Long, move: Move) {
-        //do nothing
+    // world stopped - players can't move
+    override fun move(playerId: Long, move: Move): Position {
+        playerControl.getActivePlayer(playerId) ?. let {
+            return it.position
+        }
+        throw ActivePlayerNotFoundException(playerId)
     }
 
     override fun getMapSize(): Size {
