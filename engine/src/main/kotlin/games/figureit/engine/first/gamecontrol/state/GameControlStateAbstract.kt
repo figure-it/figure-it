@@ -8,34 +8,36 @@ import java.util.HashSet
 
 abstract class GameControlStateAbstract(
     private val playerGenerator: PlayerGenerator,
-    private val players: MutableMap<Long, Player> = HashMap(),
+    private val activePlayers: MutableMap<Long, Player> = HashMap(),
     private val pendingAddPlayers: MutableMap<Long, Player> = HashMap(),
-    private val pendingRemovePlayers: MutableSet<Long> = HashSet()
-
+    private val pendingRemovePlayers: MutableSet<Long> = HashSet(),
+    private val allPlayers: MutableMap<Long, Player> = HashMap()
 ): GameControlState {
     override fun addPlayer(): Player {
         val player = playerGenerator.generate()
-        pendingAddPlayers[player.id] = player
+        allPlayers[player.id] = player
         return player
     }
 
-    override fun removePlayer(id: Long) {
-        if (pendingAddPlayers[id] != null) {
-            pendingAddPlayers.remove(id)
-            return
-        }
-        if (players.containsKey(id)) {
-            pendingRemovePlayers.add(id)
-        }
+    override fun activatePlayer(id: Long) {
+        pendingRemovePlayers.remove(id)
+        allPlayers[id] ?. let { pendingAddPlayers.put(id, it) }
+    }
+
+    override fun deactivatePlayer(id: Long) {
+        pendingAddPlayers.remove(id)
+        activePlayers[id] ?. let { pendingRemovePlayers.add(id) }
     }
 
     override fun getActivePlayers(): Collection<Player> {
-        return players.values
+        return activePlayers.values
     }
 
     override fun getPendingPlayers(): Collection<Player> {
         return pendingAddPlayers.values
     }
 
-
+    override fun getAllPlayers(): Collection<Player> {
+        return allPlayers.values
+    }
 }

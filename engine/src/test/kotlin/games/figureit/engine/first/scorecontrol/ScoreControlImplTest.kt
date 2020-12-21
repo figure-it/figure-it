@@ -7,12 +7,11 @@ import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorIm
 import games.figureit.engine.first.scorecontrol.figuregenerator.FigureGeneratorDiagonal
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
-import games.figureit.engine.model.PositionState.ON_MAP
+import games.figureit.engine.model.PositionState.ACTIVE
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.any
 import org.mockito.Mockito.anyInt
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -32,6 +31,15 @@ class ScoreControlImplTest {
         playerListStore = Mockito.mock(PlayerListStore::class.java)
         playerGenerator = PlayerGeneratorImpl()
         scoreScheduler = Mockito.mock(ScoreScheduler::class.java)
+    }
+
+    @Test
+    fun testWithoutPlayers() {
+        `when`(playerListStore.getActivePlayers()).thenReturn(emptyList())
+        `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
+        val scoreControl = ScoreControlImpl(timerControl, playerListStore, figureGenerator, scoreScheduler)
+        scoreControl.start()
+        scoreControl.run()
     }
 
     @Test
@@ -80,7 +88,7 @@ class ScoreControlImplTest {
     private fun generatePlayer(x: Int, y: Int): Player {
         val player = playerGenerator.generate()
         player.position = Position(x, y)
-        player.positionState = ON_MAP
+        player.positionState = ACTIVE
         return player
     }
 }

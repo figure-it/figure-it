@@ -10,7 +10,7 @@ class FigureGeneratorDiagonalTest {
     @Test
     fun generateFigureTwoPlayers() {
         val generator = FigureGeneratorDiagonal()
-        val figure = generator.generate(2);
+        val figure = generator.generate(2)
 
         val pixels = figure.pixels
 
@@ -22,7 +22,7 @@ class FigureGeneratorDiagonalTest {
     @Test
     fun generateFigureThreePlayers() {
         val generator = FigureGeneratorDiagonal()
-        val figure = generator.generate(3);
+        val figure = generator.generate(3)
 
         val pixels = figure.pixels
 

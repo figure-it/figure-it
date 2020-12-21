@@ -11,7 +11,7 @@ class PlayerGeneratorImpl : PlayerGenerator {
     override fun generate(): Player {
         return Player(
             id = playerIdCounter++,
-            positionState = PositionState.PENDING,
+            positionState = PositionState.INACTIVE,
             position = Position(0, 0)
         )
     }

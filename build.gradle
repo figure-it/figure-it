@@ -1,0 +1,26 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.20" apply false
+    id "org.springframework.boot" version "2.4.0" apply false
+    id "org.jetbrains.kotlin.plugin.spring" version "1.3.41" apply false
+    id "io.spring.dependency-management" version "1.0.8.RELEASE" apply false
+}
+
+configure(subprojects) { project ->
+    apply plugin: "idea"
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.jetbrains.kotlin.plugin.spring"
+    apply plugin: "org.jetbrains.kotlin.jvm"
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.4.0")
+        }
+    }
+
+
+}

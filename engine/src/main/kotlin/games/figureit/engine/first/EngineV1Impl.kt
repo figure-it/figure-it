@@ -3,7 +3,7 @@ package games.figureit.engine.first
 import games.figureit.engine.Engine
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Move
-import games.figureit.engine.model.Player
+import games.figureit.engine.model.PlayerDto
 import games.figureit.engine.model.Size
 
 class EngineV1Impl(
@@ -12,16 +12,24 @@ class EngineV1Impl(
     private val scoreControl: ScoreControl
 ) : Engine {
 
-    override fun addPlayer(): Player {
-        return playerControl.addPlayer()
+    override fun addPlayer(): PlayerDto {
+        return PlayerDto(playerControl.addPlayer())
     }
 
-    override fun removePlayer(playerId: Long) {
-        playerControl.removePlayer(playerId)
+    override fun activatePlayer(playerId: Long) {
+        playerControl.activatePlayer(playerId)
     }
 
-    override fun getAllPlayers(): List<Player> {
-        return playerControl.getActivePlayers() + playerControl.getPendingPlayers()
+    override fun deactivatePlayer(playerId: Long) {
+        playerControl.deactivatePlayer(playerId)
+    }
+
+    override fun getOnlinePlayers(): List<PlayerDto> {
+        return (playerControl.getActivePlayers() + playerControl.getPendingPlayers()) . map { PlayerDto(it) }
+    }
+
+    override fun getAllPlayers(): List<PlayerDto> {
+        return playerControl.getAllPlayers() . map { PlayerDto(it) }
     }
 
     override fun getCurrentFigure(): Figure {

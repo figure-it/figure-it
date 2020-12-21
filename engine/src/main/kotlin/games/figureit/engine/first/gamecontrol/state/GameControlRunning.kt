@@ -1,9 +1,9 @@
 package games.figureit.engine.first.gamecontrol.state
 
+import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.GameControlState
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.PositionGenerator
-import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Size
@@ -14,10 +14,11 @@ class GameControlRunning(
     private val positionGenerator: PositionGenerator,
     private val field: Field,
     private val playerGenerator: PlayerGenerator,
-    private val players: MutableMap<Long, Player> = HashMap(),
+    private val activePlayers: MutableMap<Long, Player> = HashMap(),
     private val pendingAddPlayers: MutableMap<Long, Player> = HashMap(),
-    private val pendingRemovePlayers: MutableSet<Long> = HashSet()
-): GameControlStateAbstract(playerGenerator, players, pendingAddPlayers, pendingRemovePlayers) {
+    private val pendingRemovePlayers: MutableSet<Long> = HashSet(),
+    private val allPlayers: MutableMap<Long, Player> = HashMap()
+): GameControlStateAbstract(playerGenerator, activePlayers, pendingAddPlayers, pendingRemovePlayers, allPlayers) {
     override fun stopTheWorld(): GameControlState {
         return GameControlStopped(
             positionGenerator = positionGenerator,
@@ -25,7 +26,8 @@ class GameControlRunning(
             field = field,
             playersToAdd = pendingAddPlayers,
             playersToRemove = pendingRemovePlayers,
-            players = players
+            activePlayers = activePlayers,
+            allPlayers = allPlayers
         )
     }
 
@@ -34,7 +36,7 @@ class GameControlRunning(
     }
 
     override fun move(playerId: Long, move: Move) {
-        players[playerId] ?. let {
+        activePlayers[playerId] ?. let {
             move.move(field, it)
         }
     }
