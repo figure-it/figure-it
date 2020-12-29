@@ -30,8 +30,8 @@ enum class Move {
         private fun movePlayerToPosition(field: Field, player: Player, action: (Position) -> Position): Position {
             val newPosition = action.invoke(player.position)
             if (field.freeAt(newPosition)) {
-                field.set(player.position, null)
-                field.set(newPosition, player)
+                field.setPlayerOnFieldPosition(player.position, null)
+                field.setPlayerOnFieldPosition(newPosition, player)
                 player.position = newPosition
             }
             return player.position

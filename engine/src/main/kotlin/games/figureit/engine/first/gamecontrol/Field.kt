@@ -23,11 +23,11 @@ class Field(width: Int, height: Int) {
         return field[y][x]
     }
 
-    fun set(position: Position, player: Player?) {
-        set(position.x, position.y, player)
+    fun setPlayerOnFieldPosition(position: Position, player: Player?) {
+        setPlayerOnFieldPosition(position.x, position.y, player)
     }
 
-    fun set(x: Int, y: Int, player: Player?) {
+    fun setPlayerOnFieldPosition(x: Int, y: Int, player: Player?) {
         field[y][x] = player
     }
 

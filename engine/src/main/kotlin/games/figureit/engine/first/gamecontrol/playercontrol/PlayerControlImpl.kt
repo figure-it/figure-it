@@ -45,7 +45,7 @@ class PlayerControlImpl(
             val player = activePlayers[playerId]
             player?.let {
                 val position = it.position
-                field.set(position, null)
+                field.setPlayerOnFieldPosition(position, null)
                 activePlayers.remove(playerId)
                 playerUpdateListener.playerDeactivated(it.id)
             }
@@ -78,7 +78,7 @@ class PlayerControlImpl(
         val position = positionGenerator.generate(field.getSize(), currentPositions)
         player.position = position
         player.positionState = PositionState.ACTIVE
-        field.set(position, player)
+        field.setPlayerOnFieldPosition(position, player)
         activePlayers[player.id] = player
         playerUpdateListener.playerActivated(PlayerDto(player))
         return position

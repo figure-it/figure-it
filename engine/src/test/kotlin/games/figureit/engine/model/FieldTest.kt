@@ -28,21 +28,21 @@ class FieldTest {
 
     @Test
     fun testNotFreeAt() {
-        field.set(0,0, generatePlayer())
+        field.setPlayerOnFieldPosition(0,0, generatePlayer())
         assertThat(field.freeAt(0, 0), equalTo(false))
     }
 
     @Test
     fun testTheSameObject() {
         val p = generatePlayer()
-        field.set(0,0, p)
+        field.setPlayerOnFieldPosition(0,0, p)
         assertThat(field.playerAt(0, 0), sameInstance(p))
     }
 
     @Test
     fun testPlayerAtByPosition() {
         val p = generatePlayer()
-        field.set(0,0, p)
+        field.setPlayerOnFieldPosition(0,0, p)
         assertThat(field.playerAt(Position(0, 0)), sameInstance(p))
     }
 
