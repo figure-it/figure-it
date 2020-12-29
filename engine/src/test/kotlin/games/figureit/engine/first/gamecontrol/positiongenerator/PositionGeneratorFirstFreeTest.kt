@@ -6,6 +6,8 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
+import java.lang.RuntimeException
+import java.util.ArrayList
 
 internal class PositionGeneratorFirstFreeTest {
 
@@ -40,5 +42,13 @@ internal class PositionGeneratorFirstFreeTest {
         val thirdPosition = playerStrategy.generate(defaultSize, positions)
         val expectedPosition = Position(0, 1)
         assertThat(thirdPosition, equalTo(expectedPosition))
+    }
+
+    @Test(expectedExceptions = [RuntimeException::class])
+    fun notEnoughSpace() {
+        val size = Size(1,1)
+        val positions = ArrayList<Position>()
+        positions.add(playerStrategy.generate(size, emptyList()))
+        playerStrategy.generate(size, positions)
     }
 }

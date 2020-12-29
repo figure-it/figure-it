@@ -2,91 +2,65 @@ package games.figureit.engine.first.gamecontrol.state
 
 import games.figureit.engine.first.gamecontrol.Field
 import games.figureit.engine.first.gamecontrol.GameControlState
+import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.PositionGenerator
+import games.figureit.engine.first.gamecontrol.playercontrol.PlayerControlImpl
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
 import games.figureit.engine.model.Move.DOWN
 import games.figureit.engine.model.Move.LEFT
 import games.figureit.engine.model.Move.RIGHT
 import games.figureit.engine.model.Move.UP
-import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
-import games.figureit.engine.model.PositionState.ACTIVE
-import games.figureit.engine.model.PositionState.INACTIVE
+import games.figureit.engine.model.Size
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.nullValue
-import org.hamcrest.Matchers.sameInstance
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
-import java.util.HashMap
 
 class GameControlRunningTest {
 
-    private lateinit var playerGenerator: PlayerGenerator
+    private lateinit var playerControl: PlayerControl
+    private lateinit var state: GameControlState
+    private lateinit var field: Field
+    private val defaultSize = Size(5, 5)
 
     @BeforeMethod
     fun beforeEach() {
-        playerGenerator = PlayerGeneratorImpl()
-    }
-
-    @Test
-    fun addNoPlayersActive() {
-        val state = createDefaultState()
-        val players = state.getActivePlayers()
-        assertThat(players, Matchers.hasSize(0))
-    }
-
-    @Test
-    fun addNoPlayersPending() {
-        val state = createDefaultState()
-        val players = state.getPendingPlayers()
-        assertThat(players, Matchers.hasSize(0))
-    }
-
-    @Test
-    fun newPlayersAreNotActive() {
-        val state = createDefaultState()
-        val players = state.getActivePlayers()
-        assertThat(players, Matchers.hasSize(0))
-    }
-
-    @Test
-    fun newPlayersArePending() {
-        val gameState = createDefaultState()
-        val p = gameState.addPlayer()
-        gameState.activatePlayer(p.id)
-        val players = gameState.getPendingPlayers()
-        assertThat(players, Matchers.hasSize(1))
-        val state = players.stream().findAny().get().positionState
-        assertThat(state, equalTo(INACTIVE))
+        val positionGenerator: PositionGenerator = PositionGeneratorFirstFree()
+        val playerGenerator: PlayerGenerator = PlayerGeneratorImpl()
+        field = Field(defaultSize.width, defaultSize.height)
+        playerControl = PlayerControlImpl(playerGenerator, positionGenerator)
+        state = GameControlRunning(field, playerControl)
     }
 
     @Test
     fun movePlayer() {
-        val field = Field(5, 5)
-        val player = generatePlayerOnMap(2, 2, field)
-        val state = createDefaultState(players = mutableMapOf(player.id to player), field = field)
+        val player = playerControl.addPlayer()
+        playerControl.activatePlayer(player.id)
+        playerControl.submitPreparations(field)
 
-        state.move(1, RIGHT)
-        state.move(1, DOWN)
-        state.move(1, RIGHT)
+        state.move(player.id, RIGHT)
+        state.move(player.id, DOWN)
+        state.move(player.id, RIGHT)
 
-        assertThat(player.position, equalTo(Position(4,3)))
+        val actual = playerControl.getActivePlayer(player.id)!!
+        assertThat(actual.position, equalTo(Position(2,1)))
         assertThat(field.playerAt(2, 2), nullValue())
-        assertThat(field.playerAt(4, 3), sameInstance(player))
+        assertThat(field.playerAt(2, 1)!!.id, equalTo(player.id))
     }
 
     @Test
     fun moveTwoPlayers() {
-        val field = Field(5, 5)
-        val player1 = generatePlayerOnMap(2, 2, field)
-        val player2 = generatePlayerOnMap(3, 2, field)
+        val player1 = playerControl.addPlayer()
+        val player2 = playerControl.addPlayer()
+        playerControl.activatePlayer(player1.id)
+        playerControl.activatePlayer(player2.id)
+        playerControl.submitPreparations(field)
 
-        val state = createDefaultState(field = field,
-            players = mutableMapOf(player1.id to player1, player2.id to player2))
         state.move(1, RIGHT)  //occupied
         state.move(1, DOWN)
         state.move(1, RIGHT)
@@ -94,32 +68,30 @@ class GameControlRunningTest {
         state.move(2, LEFT)
         state.move(1, UP)
 
-        assertThat(player1.position, equalTo(Position(3,2)))
-        assertThat(player2.position, equalTo(Position(2,2)))
-        assertThat(field.playerAt(3, 2), sameInstance(player1))
-        assertThat(field.playerAt(2, 2), sameInstance(player2))
+        val actual1 = playerControl.getActivePlayer(player1.id)!!
+        val actual2 = playerControl.getActivePlayer(player2.id)!!
+        assertThat(actual1.position, equalTo(Position(1, 0)))
+        assertThat(actual2.position, equalTo(Position(0,0)))
+        assertThat(field.playerAt(1, 0)!!.id, equalTo(player1.id))
+        assertThat(field.playerAt(0, 0)!!.id, equalTo(player2.id))
     }
 
-    private fun createDefaultState(
-        positionGenerator: PositionGenerator = PositionGeneratorFirstFree(),
-        playerGenerator: PlayerGenerator = PlayerGeneratorImpl(),
-        field: Field = Field(5, 5),
-        players: MutableMap<Long, Player> = HashMap()
-    ): GameControlState {
-        return GameControlRunning(
-            positionGenerator = positionGenerator,
-            playerGenerator = playerGenerator,
-            field = field,
-            activePlayers = players
-        )
+    @Test
+    fun startTheWorld() {
+        val actual = state.startTheWorld()
+        assertThat(actual, equalTo(state))
     }
 
-    private fun generatePlayerOnMap(x: Int, y: Int, field: Field): Player {
-        val player = playerGenerator.generate()
-        player.position = Position(x, y)
-        player.positionState = ACTIVE
-        field.set(x, y, player)
-        return player
+    @Test
+    fun stopTheWorld() {
+        val actual = state.stopTheWorld()
+        assertThat(actual, instanceOf(GameControlStopped::class.java))
+    }
+
+    @Test
+    fun size() {
+        val actual = state.getMapSize()
+        assertThat(actual, equalTo(defaultSize))
     }
 
 }

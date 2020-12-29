@@ -1,6 +1,7 @@
 package games.figureit.engine.first
 
 import games.figureit.engine.Engine
+import games.figureit.engine.first.gamecontrol.PlayerControl
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.PlayerDto

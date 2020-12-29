@@ -1,35 +1,29 @@
 package games.figureit.engine.first.gamecontrol
 
 import games.figureit.engine.first.GameControl
-import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
+import games.figureit.engine.first.listener.WorldStateListener
 import games.figureit.engine.first.gamecontrol.state.GameControlStopped
+import games.figureit.engine.first.listener.EmptyWorldStateListener
 import games.figureit.engine.model.Move
-import games.figureit.engine.model.Player
+import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
 
 class GameControlSynchronized(
-    positionGenerator: PositionGenerator,
-    mapSide: Int
+    playerControl: PlayerControl,
+    mapSide: Int,
+    private val worldStateListener: WorldStateListener = EmptyWorldStateListener()
 ): GameControl {
 
     private var currentState: GameControlState = GameControlStopped(
-        positionGenerator = positionGenerator,
-        playerGenerator = PlayerGeneratorImpl(),
+        playerControl = playerControl,
         field = Field(mapSide, mapSide)
     )
 
     @Synchronized
-    override fun move(playerId: Long, move: Move) {
-        currentState.move(playerId, move)
-    }
-
-    @Synchronized
-    override fun addPlayer(): Player {
-        return currentState.addPlayer()
-    }
-
-    override fun activatePlayer(id: Long) {
-        return currentState.activatePlayer(id)
+    override fun move(playerId: Long, move: Move): Position {
+        val position = currentState.move(playerId, move)
+        worldStateListener.playerPositionUpdate(playerId, position)
+        return position
     }
 
     @Synchronized
@@ -38,32 +32,15 @@ class GameControlSynchronized(
     }
 
     @Synchronized
-    override fun deactivatePlayer(id: Long) {
-        return currentState.deactivatePlayer(id)
-    }
-
-    @Synchronized
-    override fun getActivePlayers(): Collection<Player> {
-        return currentState.getActivePlayers()
-    }
-
-    @Synchronized
-    override fun getPendingPlayers(): Collection<Player> {
-        return currentState.getPendingPlayers()
-    }
-
-    override fun getAllPlayers(): Collection<Player> {
-        return currentState.getAllPlayers()
-    }
-
-    @Synchronized
     override fun stopTheWorld() {
         this.currentState = currentState.stopTheWorld()
+        worldStateListener.worldStopped()
     }
 
     @Synchronized
     override fun startTheWorld() {
         this.currentState = currentState.startTheWorld()
+        worldStateListener.worldStarted()
     }
 
 }
