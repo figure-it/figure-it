@@ -46,7 +46,7 @@ internal class PositionGeneratorFirstFreeTest {
 
     @Test(expectedExceptions = [RuntimeException::class])
     fun notEnoughSpace() {
-        val size = Size(1,1)
+        val size = Size(1, 1)
         val positions = ArrayList<Position>()
         positions.add(playerStrategy.generate(size, emptyList()))
         playerStrategy.generate(size, positions)

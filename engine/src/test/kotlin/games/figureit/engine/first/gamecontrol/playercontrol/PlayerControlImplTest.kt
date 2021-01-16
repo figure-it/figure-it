@@ -80,7 +80,6 @@ class PlayerControlImplTest {
         MatcherAssert.assertThat(players, Matchers.hasSize(0))
     }
 
-
     @Test
     fun removeToZero() {
         playerControl.addPlayer()
@@ -113,5 +112,4 @@ class PlayerControlImplTest {
         val players = playerControl.getActivePlayers()
         MatcherAssert.assertThat(players, Matchers.hasItem(GameControlTest.player(p.id, ACTIVE, 0, 0)))
     }
-
 }

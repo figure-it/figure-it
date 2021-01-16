@@ -15,5 +15,4 @@ class PlayerGeneratorImpl : PlayerGenerator {
             position = Position(0, 0)
         )
     }
-
 }

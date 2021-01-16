@@ -2,16 +2,16 @@ package games.figureit.engine.first.listener
 
 import games.figureit.engine.model.Position
 
-class EmptyWorldStateListener: WorldStateListener {
+class EmptyWorldStateListener : WorldStateListener {
     override fun worldStopped() {
-        //do nothing
+        // do nothing
     }
 
     override fun worldStarted() {
-        //do nothing
+        // do nothing
     }
 
     override fun playerPositionUpdate(playerId: Long, position: Position) {
-        //do nothing
+        // do nothing
     }
 }

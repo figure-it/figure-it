@@ -4,7 +4,7 @@ import games.figureit.engine.first.gamecontrol.PositionGenerator
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
 
-class PositionGeneratorFirstFree: PositionGenerator {
+class PositionGeneratorFirstFree : PositionGenerator {
 
     override fun generate(mapSize: Size, positions: Collection<Position>): Position {
         var counter = 0

@@ -18,7 +18,7 @@ class PlayerControlImpl(
     private val positionGenerator: PositionGenerator,
     private val playerUpdateListener: PlayerUpdateListener = EmptyPlayerUpdateListener(),
     private val allPlayers: MutableMap<Long, Player> = HashMap()
-): PlayerControl {
+) : PlayerControl {
 
     private val activePlayers: MutableMap<Long, Player> = HashMap()
     private val pendingAddPlayers: MutableMap<Long, Player> = HashMap()
@@ -51,7 +51,7 @@ class PlayerControlImpl(
             }
         }
         pendingRemovePlayers.clear()
-        val currentPositions = activePlayers.values.map { it.position } .toMutableList()
+        val currentPositions = activePlayers.values.map { it.position }.toMutableList()
         for (player in pendingAddPlayers.values) {
             currentPositions.add(positionPlayer(player, currentPositions, field))
         }

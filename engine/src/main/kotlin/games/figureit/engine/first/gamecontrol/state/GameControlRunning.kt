@@ -8,10 +8,7 @@ import games.figureit.engine.model.Move
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
 
-class GameControlRunning(
-    private val field: Field,
-    private val playerControl: PlayerControl
-): GameControlState {
+class GameControlRunning(private val field: Field, private val playerControl: PlayerControl) : GameControlState {
     override fun stopTheWorld(): GameControlState {
         return GameControlStopped(
             field = field,

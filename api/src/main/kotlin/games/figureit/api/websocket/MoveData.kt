@@ -1,5 +1,5 @@
 package games.figureit.api.websocket
 
-data class MoveData (
+data class MoveData(
     val move: MoveDirection
 )

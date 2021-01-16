@@ -1,9 +1,8 @@
 package games.figureit.engine.first.scorecontrol.figuregenerator
 
-import org.testng.annotations.Test
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
-
+import org.testng.annotations.Test
 
 class FigureGeneratorDiagonalTest {
 

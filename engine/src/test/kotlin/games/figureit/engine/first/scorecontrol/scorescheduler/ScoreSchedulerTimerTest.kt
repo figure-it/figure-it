@@ -6,7 +6,6 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import java.lang.Thread.sleep
 
-
 class ScoreSchedulerTimerTest {
 
     private lateinit var checkRun: CheckRun
@@ -53,11 +52,10 @@ class ScoreSchedulerTimerTest {
         assertThat(checkRun.runned, equalTo(false))
     }
 
-    class CheckRun: Runnable {
+    class CheckRun : Runnable {
         var runned = false
         override fun run() {
             runned = true
         }
-
     }
 }

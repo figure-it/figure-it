@@ -2,7 +2,7 @@ package games.figureit.engine.first.scorecontrol.scorescheduler
 
 import games.figureit.engine.first.scorecontrol.ScoreScheduler
 
-class ScoreSchedulerManual: ScoreScheduler, Runnable {
+class ScoreSchedulerManual : ScoreScheduler, Runnable {
 
     private var callback: Runnable? = null
 

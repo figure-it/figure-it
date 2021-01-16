@@ -1,10 +1,10 @@
 package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
-import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
 import games.figureit.engine.first.gamecontrol.PlayerGenerator
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
+import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.first.scorecontrol.figuregenerator.FigureGeneratorDiagonal
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
@@ -40,8 +40,9 @@ class ScoreControlImplTest {
     fun testWithoutPlayers() {
         `when`(playerListStore.getActivePlayers()).thenReturn(emptyList())
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
-            figureGenerator, scoreScheduler, taskUpdateListener)
+        val scoreControl = ScoreControlImpl(
+            timerControl, playerListStore, figureGenerator, scoreScheduler, taskUpdateListener
+        )
         scoreControl.start()
         scoreControl.run()
     }
@@ -52,8 +53,9 @@ class ScoreControlImplTest {
         val p2 = generatePlayer(1, 0)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
-            figureGenerator, scoreScheduler, taskUpdateListener)
+        val scoreControl = ScoreControlImpl(
+            timerControl, playerListStore, figureGenerator, scoreScheduler, taskUpdateListener
+        )
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(0))
@@ -67,8 +69,9 @@ class ScoreControlImplTest {
         val p3 = generatePlayer(2, 2)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2, p3))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
-            figureGenerator, scoreScheduler, taskUpdateListener)
+        val scoreControl = ScoreControlImpl(
+            timerControl, playerListStore, figureGenerator, scoreScheduler, taskUpdateListener
+        )
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(2))
@@ -83,8 +86,9 @@ class ScoreControlImplTest {
         val p3 = generatePlayer(2, 2)
         `when`(playerListStore.getActivePlayers()).thenReturn(listOf(p1, p2, p3))
         `when`(figureGenerator.generate(anyInt())).thenReturn(FigureGeneratorDiagonal().generate(2))
-        val scoreControl = ScoreControlImpl(timerControl, playerListStore,
-            figureGenerator, scoreScheduler, taskUpdateListener)
+        val scoreControl = ScoreControlImpl(
+            timerControl, playerListStore, figureGenerator, scoreScheduler, taskUpdateListener
+        )
         scoreControl.start()
         scoreControl.run()
         assertThat(p1.score, equalTo(2))

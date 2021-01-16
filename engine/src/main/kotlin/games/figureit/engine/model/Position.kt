@@ -1,6 +1,6 @@
 package games.figureit.engine.model
 
-class Position (
+class Position(
     val x: Int,
     val y: Int
 ) {
@@ -29,5 +29,4 @@ class Position (
     override fun toString(): String {
         return "Position(x=$x, y=$y)"
     }
-
 }

@@ -28,70 +28,70 @@ class FieldTest {
 
     @Test
     fun testNotFreeAt() {
-        field.setPlayerOnFieldPosition(0,0, generatePlayer())
+        field.setPlayerOnFieldPosition(0, 0, generatePlayer())
         assertThat(field.freeAt(0, 0), equalTo(false))
     }
 
     @Test
     fun testTheSameObject() {
         val p = generatePlayer()
-        field.setPlayerOnFieldPosition(0,0, p)
+        field.setPlayerOnFieldPosition(0, 0, p)
         assertThat(field.playerAt(0, 0), sameInstance(p))
     }
 
     @Test
     fun testPlayerAtByPosition() {
         val p = generatePlayer()
-        field.setPlayerOnFieldPosition(0,0, p)
+        field.setPlayerOnFieldPosition(0, 0, p)
         assertThat(field.playerAt(Position(0, 0)), sameInstance(p))
     }
 
     @Test
     fun testLeftAcrossZeroBorder() {
-        val actual = field.leftFor(Position(0,10))
+        val actual = field.leftFor(Position(0, 10))
         assertThat(actual, equalTo(Position(0, 10)))
     }
 
     @Test
     fun testLeft() {
-        val actual = field.leftFor(Position(5,10))
+        val actual = field.leftFor(Position(5, 10))
         assertThat(actual, equalTo(Position(4, 10)))
     }
 
     @Test
     fun testRightAcrossZeroBorder() {
-        val actual = field.rightFor(Position(side - 1,10))
+        val actual = field.rightFor(Position(side - 1, 10))
 
         assertThat(actual, equalTo(Position(side - 1, 10)))
     }
 
     @Test
     fun testRight() {
-        val actual = field.rightFor(Position(5,10))
+        val actual = field.rightFor(Position(5, 10))
         assertThat(actual, equalTo(Position(6, 10)))
     }
 
     @Test
     fun testUpAcrossZeroBorder() {
-        val actual = field.upFor(Position(3,0))
+        val actual = field.upFor(Position(3, 0))
         assertThat(actual, equalTo(Position(3, 0)))
     }
 
     @Test
     fun testUp() {
-        val actual = field.upFor(Position(4,9))
+        val actual = field.upFor(Position(4, 9))
         assertThat(actual, equalTo(Position(4, 8)))
     }
 
     @Test
     fun testDownAcrossZeroBorder() {
-        val actual = field.downFor(Position(3,side - 1))
+        val actual = field.downFor(Position(3, side - 1))
         assertThat(actual, equalTo(Position(3, side - 1)))
     }
 
     @Test
     fun testDown() {
-        val actual = field.downFor(Position(4,11))
+        val actual = field.downFor(Position(4, 11))
         assertThat(actual, equalTo(Position(4, 12)))
     }
 

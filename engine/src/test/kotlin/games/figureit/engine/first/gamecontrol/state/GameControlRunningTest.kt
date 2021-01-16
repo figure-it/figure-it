@@ -48,7 +48,7 @@ class GameControlRunningTest {
         state.move(player.id, RIGHT)
 
         val actual = playerControl.getActivePlayer(player.id)!!
-        assertThat(actual.position, equalTo(Position(2,1)))
+        assertThat(actual.position, equalTo(Position(2, 1)))
         assertThat(field.playerAt(2, 2), nullValue())
         assertThat(field.playerAt(2, 1)!!.id, equalTo(player.id))
     }
@@ -61,17 +61,17 @@ class GameControlRunningTest {
         playerControl.activatePlayer(player2.id)
         playerControl.submitPreparations(field)
 
-        state.move(1, RIGHT)  //occupied
+        state.move(1, RIGHT) // occupied
         state.move(1, DOWN)
         state.move(1, RIGHT)
-        state.move(1, UP)     //occupied
+        state.move(1, UP) // occupied
         state.move(2, LEFT)
         state.move(1, UP)
 
         val actual1 = playerControl.getActivePlayer(player1.id)!!
         val actual2 = playerControl.getActivePlayer(player2.id)!!
         assertThat(actual1.position, equalTo(Position(1, 0)))
-        assertThat(actual2.position, equalTo(Position(0,0)))
+        assertThat(actual2.position, equalTo(Position(0, 0)))
         assertThat(field.playerAt(1, 0)!!.id, equalTo(player1.id))
         assertThat(field.playerAt(0, 0)!!.id, equalTo(player2.id))
     }
@@ -93,5 +93,4 @@ class GameControlRunningTest {
         val actual = state.getMapSize()
         assertThat(actual, equalTo(defaultSize))
     }
-
 }

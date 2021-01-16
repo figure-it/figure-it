@@ -4,10 +4,10 @@ import games.figureit.engine.model.PlayerDto
 
 class EmptyPlayerUpdateListener : PlayerUpdateListener {
     override fun playerActivated(player: PlayerDto) {
-        //do nothing
+        // do nothing
     }
 
     override fun playerDeactivated(playerId: Long) {
-        //do nothing
+        // do nothing
     }
 }
