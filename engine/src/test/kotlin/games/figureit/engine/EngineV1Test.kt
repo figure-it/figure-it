@@ -29,7 +29,6 @@ import org.mockito.Mockito.mock
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-
 class EngineV1Test {
 
     private lateinit var engine: Engine
@@ -37,7 +36,7 @@ class EngineV1Test {
     private lateinit var scoreControl: ScoreControl
     private lateinit var playerControl: PlayerControl
 
-    private val figureGenerator  = mock(FigureGenerator::class.java)
+    private val figureGenerator = mock(FigureGenerator::class.java)
     private val positionGenerator: PositionGenerator = PositionGeneratorFirstFree()
     private val playerGenerator: PlayerGenerator = PlayerGeneratorImpl()
     private val scoreScheduler = ScoreSchedulerManual()
@@ -71,7 +70,7 @@ class EngineV1Test {
     fun addPlayerOnStopStillPending() {
         val p = engine.addPlayer()
         engine.activatePlayer(p.id)
-        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers() . map { it.id to it } . toMap()
+        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers().map { it.id to it }.toMap()
         assertThat(players.values, hasSize(1))
         assertThat(players.keys, hasItem(p.id))
         assertThat(players[p.id]!!.positionState, equalTo(INACTIVE))
@@ -82,7 +81,7 @@ class EngineV1Test {
         val p = engine.addPlayer()
         engine.activatePlayer(p.id)
         engine.start()
-        val players: Map<Long, PlayerDto> = engine.getAllPlayers() . map { it.id to it } . toMap()
+        val players: Map<Long, PlayerDto> = engine.getAllPlayers().map { it.id to it }.toMap()
         assertThat(players.values, hasSize(1))
         assertThat(players.keys, hasItem(p.id))
         assertThat(players[p.id]!!.positionState, equalTo(ACTIVE))
@@ -100,7 +99,7 @@ class EngineV1Test {
         engine.move(p2.id, DOWN)
         scoreScheduler.run()
 
-        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers() . map { it.id to it } . toMap()
+        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers().map { it.id to it }.toMap()
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(2))
     }
@@ -122,7 +121,7 @@ class EngineV1Test {
         engine.move(p3.id, DOWN)
         scoreScheduler.run()
 
-        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers() . map { it.id to it } . toMap()
+        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers().map { it.id to it }.toMap()
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(4))
         assertThat(players[p3.id]!!.score, equalTo(2))
@@ -144,7 +143,7 @@ class EngineV1Test {
         engine.move(p3.id, DOWN)
         scoreScheduler.run()
 
-        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers() . map { it.id to it } . toMap()
+        val players: Map<Long, PlayerDto> = engine.getOnlinePlayers().map { it.id to it }.toMap()
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(4))
         assertThat(players[p3.id]!!.score, equalTo(2))
@@ -163,14 +162,13 @@ class EngineV1Test {
         engine.deactivatePlayer(p1.id)
         val p3 = engine.addPlayer()
         engine.activatePlayer(p3.id)
-        scoreScheduler.run() //win with p1 and p2, p2 deleted, p3 added instead p1
+        scoreScheduler.run() // win with p1 and p2, p2 deleted, p3 added instead p1
 
-        scoreScheduler.run() //win with p2 and p3
+        scoreScheduler.run() // win with p2 and p3
 
-        val players = engine.getAllPlayers().map { it.id to it } .toMap()
+        val players = engine.getAllPlayers().map { it.id to it }.toMap()
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(4))
         assertThat(players[p3.id]!!.score, equalTo(2))
     }
-
 }

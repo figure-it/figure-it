@@ -10,7 +10,6 @@ import games.figureit.engine.first.gamecontrol.playercontrol.PlayerControlImpl
 import games.figureit.engine.first.gamecontrol.playergenerator.PlayerGeneratorImpl
 import games.figureit.engine.first.gamecontrol.positiongenerator.PositionGeneratorFirstFree
 import games.figureit.engine.model.Move.RIGHT
-import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -69,5 +68,4 @@ class GameControlStoppedTest {
         val actual = state.getMapSize()
         assertThat(actual, equalTo(defaultSize))
     }
-
 }

@@ -1,6 +1,6 @@
 package games.figureit.engine.model
 
-data class Player (
+data class Player(
     val id: Long,
     var positionState: PositionState = PositionState.INACTIVE,
     var position: Position = Position(0, 0),

@@ -5,10 +5,10 @@ import games.figureit.engine.model.Position
 
 class EmptyTaskUpdateListener : TaskUpdateListener {
     override fun taskCompleted(figure: Figure, position: Position, players: List<Long>) {
-        //do nothing
+        // do nothing
     }
 
     override fun taskUpdated(figure: Figure) {
-        //do nothing
+        // do nothing
     }
 }

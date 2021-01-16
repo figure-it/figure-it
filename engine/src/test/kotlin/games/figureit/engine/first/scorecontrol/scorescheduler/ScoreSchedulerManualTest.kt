@@ -5,7 +5,6 @@ import org.hamcrest.Matchers.equalTo
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-
 class ScoreSchedulerManualTest {
 
     private lateinit var checkRun: CheckRun
@@ -41,11 +40,10 @@ class ScoreSchedulerManualTest {
         assertThat(checkRun.runned, equalTo(false))
     }
 
-    class CheckRun: Runnable {
+    class CheckRun : Runnable {
         var runned = false
         override fun run() {
             runned = true
         }
-
     }
 }

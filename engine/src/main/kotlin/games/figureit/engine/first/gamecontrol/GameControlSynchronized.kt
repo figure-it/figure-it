@@ -1,9 +1,9 @@
 package games.figureit.engine.first.gamecontrol
 
 import games.figureit.engine.first.GameControl
-import games.figureit.engine.first.listener.WorldStateListener
 import games.figureit.engine.first.gamecontrol.state.GameControlStopped
 import games.figureit.engine.first.listener.EmptyWorldStateListener
+import games.figureit.engine.first.listener.WorldStateListener
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.Size
@@ -12,7 +12,7 @@ class GameControlSynchronized(
     playerControl: PlayerControl,
     mapSide: Int,
     private val worldStateListener: WorldStateListener = EmptyWorldStateListener()
-): GameControl {
+) : GameControl {
 
     private var currentState: GameControlState = GameControlStopped(
         playerControl = playerControl,
@@ -42,5 +42,4 @@ class GameControlSynchronized(
         this.currentState = currentState.startTheWorld()
         worldStateListener.worldStarted()
     }
-
 }

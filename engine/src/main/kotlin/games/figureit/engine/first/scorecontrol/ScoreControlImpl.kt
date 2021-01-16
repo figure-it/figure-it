@@ -2,13 +2,12 @@ package games.figureit.engine.first.scorecontrol
 
 import games.figureit.engine.first.PlayerListStore
 import games.figureit.engine.first.ScoreControl
-import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.first.TimerControl
 import games.figureit.engine.first.listener.EmptyTaskUpdateListener
+import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
-import java.lang.IllegalStateException
 import java.util.ArrayList
 
 class ScoreControlImpl(
@@ -17,7 +16,7 @@ class ScoreControlImpl(
     private val figureGenerator: FigureGenerator,
     private val scoreScheduler: ScoreScheduler,
     private val taskUpdateListener: TaskUpdateListener = EmptyTaskUpdateListener()
-): ScoreControl {
+) : ScoreControl {
     private lateinit var currentFigure: Figure
 
     override fun start() {
@@ -58,7 +57,7 @@ class ScoreControlImpl(
         private val taskUpdateListener: TaskUpdateListener
     ) {
         private val figurePixels: List<Position> = positionsOfFigurePixels()
-        private val positionsWithPlayers = players.map { it.position to it } . toMap()
+        private val positionsWithPlayers = players.map { it.position to it }.toMap()
 
         fun checkAndReward() {
             if (players.isEmpty()) {
@@ -72,8 +71,8 @@ class ScoreControlImpl(
             val figureHeight = figure.pixels.size
             val figureWidth = figure.pixels[0].length
 
-            for (x in minX .. maxX - figureWidth + 1) {
-                for (y in minY .. maxY - figureHeight + 1) {
+            for (x in minX..maxX - figureWidth + 1) {
+                for (y in minY..maxY - figureHeight + 1) {
                     val pos = Position(x, y)
                     if (detectFigureAt(pos)) {
                         addScoresForFigureAt(pos)

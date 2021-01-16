@@ -18,7 +18,6 @@ import org.hamcrest.Matchers.hasItem
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-
 class GameControlTest {
 
     private val positionGenerator = PositionGeneratorFirstFree()
@@ -92,7 +91,6 @@ class GameControlTest {
         assertThat(mapSize, equalTo(defaultSize))
     }
 
-
     companion object {
         fun player(id: Long, state: PositionState, x: Int, y: Int): Player {
             return Player(
@@ -102,5 +100,4 @@ class GameControlTest {
             )
         }
     }
-
 }
