@@ -2,8 +2,6 @@ package games.figureit.api.websocket.server
 
 import games.figureit.api.websocket.FigureData
 
-class FigureAction(
+data class TaskUpdatedData(
     val data: FigureData
-) {
-    val action = "figure"
-}
+)

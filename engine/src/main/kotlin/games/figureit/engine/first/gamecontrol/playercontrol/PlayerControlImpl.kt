@@ -11,7 +11,8 @@ import games.figureit.engine.model.PlayerDto
 import games.figureit.engine.model.Position
 import games.figureit.engine.model.PositionState
 import java.util.HashMap
-import java.util.HashSet
+import java.util.LinkedHashMap
+import java.util.LinkedHashSet
 
 class PlayerControlImpl(
     private val playerGenerator: PlayerGenerator,
@@ -21,8 +22,8 @@ class PlayerControlImpl(
 ) : PlayerControl {
 
     private val activePlayers: MutableMap<Long, Player> = HashMap()
-    private val pendingAddPlayers: MutableMap<Long, Player> = HashMap()
-    private val pendingRemovePlayers: MutableSet<Long> = HashSet()
+    private val pendingAddPlayers: MutableMap<Long, Player> = LinkedHashMap()
+    private val pendingRemovePlayers: MutableSet<Long> = LinkedHashSet()
 
     override fun addPlayer(): Player {
         val player = playerGenerator.generate()
@@ -32,11 +33,17 @@ class PlayerControlImpl(
 
     override fun activatePlayer(id: Long) {
         pendingRemovePlayers.remove(id)
-        allPlayers[id] ?. let { pendingAddPlayers.put(id, it) }
+        if (activePlayers.containsKey(id)) {
+            return
+        }
+        allPlayers[id] ?. let { pendingAddPlayers[id] = it }
     }
 
     override fun deactivatePlayer(id: Long) {
         pendingAddPlayers.remove(id)
+        if (!activePlayers.containsKey(id)) {
+            return
+        }
         activePlayers[id] ?. let { pendingRemovePlayers.add(id) }
     }
 
@@ -66,8 +73,12 @@ class PlayerControlImpl(
         return activePlayers.values
     }
 
-    override fun getPendingPlayers(): Collection<Player> {
+    override fun getPendingAddPlayers(): Collection<Player> {
         return pendingAddPlayers.values
+    }
+
+    override fun getPendingRemovePlayers(): Collection<Long> {
+        return pendingRemovePlayers
     }
 
     override fun getAllPlayers(): Collection<Player> {

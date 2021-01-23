@@ -26,7 +26,7 @@ class EngineV1Impl(
     }
 
     override fun getOnlinePlayers(): List<PlayerDto> {
-        return (playerControl.getActivePlayers() + playerControl.getPendingPlayers()).map { PlayerDto(it) }
+        return (playerControl.getActivePlayers() + playerControl.getPendingAddPlayers()).map { PlayerDto(it) }
     }
 
     override fun getAllPlayers(): List<PlayerDto> {
