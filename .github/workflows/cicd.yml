@@ -55,7 +55,7 @@ jobs:
       - name: Configure credentials
         run: |
           mkdir ~/.ssh -p
-          echo -e "$ID_RSA" > ~/.ssh/id_rsa
+          echo -e "$ID_RSA" >  ~/.ssh/id_rsa
           chmod og-rwx ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
           
