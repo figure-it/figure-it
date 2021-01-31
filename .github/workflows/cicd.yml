@@ -43,7 +43,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latestdev
 
   deploy-dev:
-#    needs: compile-build-image-dev
+    needs: compile-build-image-dev
     env:
       ID_RSA: ${{ secrets.DEV_SERVER_ID_RSA }}
       SERVER_USER: ${{ secrets.DEV_SERVER_USER }}
