@@ -66,4 +66,4 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
           ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker container rm -f figure-it || true"
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker run -d -p 80:8080 --name figure-it $TAG_COMMIT"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker run -d -p 80:8080 --name figure-it $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
