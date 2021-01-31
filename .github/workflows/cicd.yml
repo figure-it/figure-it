@@ -54,14 +54,15 @@ jobs:
     steps:
       - name: Configure credentials
         run: |
-          mkdir -p ~/.ssh && echo -e "${ID_RSA//_/\\n}" > ~/.ssh/id_rsa && chmod og-rwx ~/.ssh/id_rsa
-          ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+          mkdir ~/.ssh -p
+          echo -e "$ID_RSA" > ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
           
       - name: Deploy container to dev-server
         env:
           IMAGE_TAG: ${{ github.sha }}
           ECR_REPOSITORY: figure-it/server
         run: |
-          ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
-          ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker container rm -f figure-it || true"
-          ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker run -d -p 80:8080 --name figure-it $TAG_COMMIT"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker container rm -f figure-it || true"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker run -d -p 80:8080 --name figure-it $TAG_COMMIT"
