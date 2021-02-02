@@ -1,5 +1,7 @@
 package games.figureit.service
 
+import games.figureit.api.Figure
+import games.figureit.api.Size
 import games.figureit.engine.Engine
 import games.figureit.engine.model.Move
 import games.figureit.engine.model.PlayerDto
@@ -63,5 +65,20 @@ class GameService(
 
     fun onlinePlayers(): List<PlayerDto> {
         return gameEngine.getOnlinePlayers()
+    }
+
+    fun getMapSize(): Size {
+        val size = gameEngine.getMapSize()
+        return Size(size.width, size.height)
+    }
+
+    fun getCurrentFigure(): Figure {
+        val figure = gameEngine.getCurrentFigure()
+        return Figure(
+            id = figure.id,
+            points = figure.points,
+            size = Size(figure.size.width, figure.size.height),
+            pixels = figure.pixels
+        )
     }
 }
