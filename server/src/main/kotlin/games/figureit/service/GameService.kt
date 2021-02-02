@@ -60,4 +60,8 @@ class GameService(
     fun playerRegistered(userId: Long): Boolean {
         return registeredPlayers.contains(userId)
     }
+
+    fun onlinePlayers(): List<PlayerDto> {
+        return gameEngine.getOnlinePlayers()
+    }
 }
