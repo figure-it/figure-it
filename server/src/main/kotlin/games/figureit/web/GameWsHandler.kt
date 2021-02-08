@@ -60,7 +60,6 @@ class GameWsHandler(private val gameService: GameService) : TextWebSocketHandler
         gameService.subscribePlayer(userId, session)
 
         sessions[userId] = session
-        session.sendMessage(TextMessage("Welcome"))
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
