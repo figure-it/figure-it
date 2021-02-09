@@ -1,0 +1,70 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  compile-build-image-dev:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: gradle cache
+        uses: actions/cache@v2.1.3
+        with:
+          path: ~/.gradle
+          key: gradle-cache
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Run checkstyle/test/build
+        run: gradle build
+
+      - name: Amazon ECR "Login" Action for GitHub Actions
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: figure-it/server
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build --build-arg JAR_FILE=server/build/libs/*.jar -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latestdev
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latestdev
+
+  deploy-dev:
+    needs: compile-build-image-dev
+    env:
+      ID_RSA: ${{ secrets.DEV_SERVER_ID_RSA }}
+      SERVER_USER: ${{ secrets.DEV_SERVER_USER }}
+      SERVER_ADDR: ${{ secrets.DEV_SERVER_ADDRESS }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Configure credentials
+        run: |
+          mkdir ~/.ssh -p
+          echo -e "$ID_RSA" >  ~/.ssh/id_rsa
+          chmod og-rwx ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+          
+      - name: Deploy container to dev-server
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: figure-it/server
+        run: |
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker container rm -f figure-it || true"
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_ADDR "docker run -d -p 80:8080 --name figure-it $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+

@@ -8,6 +8,8 @@ import games.figureit.engine.first.listener.TaskUpdateListener
 import games.figureit.engine.model.Figure
 import games.figureit.engine.model.Player
 import games.figureit.engine.model.Position
+import java.lang.IllegalStateException
+import java.lang.Thread.sleep
 import java.util.ArrayList
 
 class ScoreControlImpl(
@@ -20,7 +22,7 @@ class ScoreControlImpl(
     private lateinit var currentFigure: Figure
 
     override fun start() {
-        val players = playerListStore.getActivePlayers() + playerListStore.getPendingPlayers()
+        val players = playerListStore.getActivePlayers() + playerListStore.getPendingAddPlayers()
         val playerCount = players.size
         currentFigure = figureGenerator.generate(playerCount)
         timerControl.startTheWorld()
@@ -41,13 +43,17 @@ class ScoreControlImpl(
 
     override fun run() {
         timerControl.stopTheWorld()
+        sleep(100)
         val players = playerListStore.getActivePlayers()
         val checker = FigureChecker(players, currentFigure, taskUpdateListener)
         checker.checkAndReward()
-        val playersTotal = players + playerListStore.getPendingPlayers()
-        val playerCount = playersTotal.size
-        currentFigure = figureGenerator.generate(playerCount)
+        sleep(100)
+        val playersCurrent = players.size
+        val playersToAdd = playerListStore.getPendingAddPlayers().size
+        val playersToRemove = playerListStore.getPendingRemovePlayers().size
+        currentFigure = figureGenerator.generate(playersCurrent + playersToAdd - playersToRemove)
         taskUpdateListener.taskUpdated(currentFigure)
+        sleep(100)
         timerControl.startTheWorld()
     }
 
@@ -68,8 +74,8 @@ class ScoreControlImpl(
             val maxX = players.maxOf { it.position.x }
             val maxY = players.maxOf { it.position.y }
 
-            val figureHeight = figure.pixels.size
-            val figureWidth = figure.pixels[0].length
+            val figureHeight = figure.image.size
+            val figureWidth = figure.image[0].length
 
             for (x in minX..maxX - figureWidth + 1) {
                 for (y in minY..maxY - figureHeight + 1) {
@@ -104,7 +110,7 @@ class ScoreControlImpl(
 
         private fun positionsOfFigurePixels(): List<Position> {
             val result = ArrayList<Position>()
-            for ((y, row) in figure.pixels.withIndex()) {
+            for ((y, row) in figure.image.withIndex()) {
                 var x = 0
                 for (c in row) {
                     if (c == '1') {
