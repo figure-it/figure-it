@@ -71,7 +71,7 @@ class GameEventManagerWebSocket(
         broadcastUpdate(
             TASK_COMPLETED,
             TaskCompletedData(
-                image = figure.pixels,
+                image = figure.image,
                 position = positionToPixel(position),
                 winners = players
             )
@@ -84,7 +84,7 @@ class GameEventManagerWebSocket(
             TaskUpdatedData(
                 FigureData(
                     id = figure.id,
-                    image = figure.pixels,
+                    image = figure.image,
                     points = figure.points,
                     size = convertSize(figure.size),
                     timeout = figure.timeout

@@ -11,16 +11,16 @@ class FigureGeneratorDiagonal : FigureGenerator {
 
     override fun generate(playersCount: Int): Figure {
         val cnt = maxOf(2, playersCount)
-        val pixels = ArrayList<String>(cnt)
+        val image = ArrayList<String>(cnt)
         for (i in 0 until cnt) {
             val s = "0".repeat(i) + "1" + "0".repeat(cnt - i - 1)
-            pixels.add(s)
+            image.add(s)
         }
 
         return Figure(
             id = counter.getAndIncrement(),
             size = Size(cnt, cnt),
-            pixels = pixels,
+            image = image,
             points = cnt,
             timeout = 20
         )

@@ -11,7 +11,7 @@ class FigureGeneratorDiagonalTest {
         val generator = FigureGeneratorDiagonal()
         val figure = generator.generate(2)
 
-        val pixels = figure.pixels
+        val pixels = figure.image
 
         assertThat(pixels.size, equalTo(2))
         assertThat(pixels[0], equalTo("10"))
@@ -23,7 +23,7 @@ class FigureGeneratorDiagonalTest {
         val generator = FigureGeneratorDiagonal()
         val figure = generator.generate(3)
 
-        val pixels = figure.pixels
+        val pixels = figure.image
 
         assertThat(pixels.size, equalTo(3))
         assertThat(pixels[0], equalTo("100"))

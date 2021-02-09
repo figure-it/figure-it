@@ -74,8 +74,8 @@ class ScoreControlImpl(
             val maxX = players.maxOf { it.position.x }
             val maxY = players.maxOf { it.position.y }
 
-            val figureHeight = figure.pixels.size
-            val figureWidth = figure.pixels[0].length
+            val figureHeight = figure.image.size
+            val figureWidth = figure.image[0].length
 
             for (x in minX..maxX - figureWidth + 1) {
                 for (y in minY..maxY - figureHeight + 1) {
@@ -110,7 +110,7 @@ class ScoreControlImpl(
 
         private fun positionsOfFigurePixels(): List<Position> {
             val result = ArrayList<Position>()
-            for ((y, row) in figure.pixels.withIndex()) {
+            for ((y, row) in figure.image.withIndex()) {
                 var x = 0
                 for (c in row) {
                     if (c == '1') {

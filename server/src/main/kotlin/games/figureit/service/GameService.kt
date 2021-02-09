@@ -78,7 +78,7 @@ class GameService(
             id = figure.id,
             points = figure.points,
             size = Size(figure.size.width, figure.size.height),
-            pixels = figure.pixels
+            image = figure.image
         )
     }
 }
