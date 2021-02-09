@@ -83,6 +83,7 @@ class GameEventManagerWebSocket(
             TASK_UPDATED,
             TaskUpdatedData(
                 FigureData(
+                    id = figure.id,
                     image = figure.pixels,
                     points = figure.points,
                     size = convertSize(figure.size),
