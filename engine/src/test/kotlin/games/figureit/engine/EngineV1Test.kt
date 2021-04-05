@@ -116,12 +116,13 @@ class EngineV1Test {
 
         engine.start()
         engine.move(p2.id, DOWN)
-        scoreScheduler.run()
+        scoreScheduler.run() // win p1 and p2
         engine.move(p2.id, UP)
         engine.move(p3.id, DOWN)
-        scoreScheduler.run()
+        scoreScheduler.run() // win p2 and p3
 
         val players: Map<Long, PlayerDto> = engine.getOnlinePlayers().map { it.id to it }.toMap()
+
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(4))
         assertThat(players[p3.id]!!.score, equalTo(2))
@@ -170,5 +171,97 @@ class EngineV1Test {
         assertThat(players[p1.id]!!.score, equalTo(2))
         assertThat(players[p2.id]!!.score, equalTo(4))
         assertThat(players[p3.id]!!.score, equalTo(2))
+    }
+
+    @Test
+    fun scoreSchedulerGeneratesFigureAfterDeactivating() {
+        val scoreControl = ScoreControlImpl(
+            timerControl = gameControl,
+            playerListStore = playerControl,
+            figureGenerator = FigureGeneratorDiagonal(),
+            scoreScheduler = scoreScheduler
+        )
+        val engine = EngineV1Impl(playerControl, gameControl, scoreControl)
+        val p1 = engine.addPlayer()
+        val p2 = engine.addPlayer()
+        val p3 = engine.addPlayer()
+        engine.activatePlayer(p1.id)
+        engine.activatePlayer(p2.id)
+        engine.activatePlayer(p3.id)
+
+        engine.start()
+        engine.move(p2.id, DOWN)
+        engine.move(p3.id, DOWN)
+        engine.move(p3.id, DOWN)
+        engine.deactivatePlayer(p1.id)
+
+        scoreScheduler.run() // win with p1 and p2 and p3, then delete p1 and generate figure for  2 players
+        scoreScheduler.run() // win with p2 and p3
+
+        val players = engine.getAllPlayers().map { it.id to it }.toMap()
+        assertThat(players[p1.id]!!.score, equalTo(3))
+        assertThat(players[p2.id]!!.score, equalTo(5))
+        assertThat(players[p3.id]!!.score, equalTo(5))
+    }
+
+    @Test
+    fun deactivationAndActivationOfTheSamePersonDoesntAffectAnything() {
+        val scoreControl = ScoreControlImpl(
+            timerControl = gameControl,
+            playerListStore = playerControl,
+            figureGenerator = FigureGeneratorDiagonal(),
+            scoreScheduler = scoreScheduler
+        )
+        val engine = EngineV1Impl(playerControl, gameControl, scoreControl)
+        val p1 = engine.addPlayer()
+        val p2 = engine.addPlayer()
+        val p3 = engine.addPlayer()
+        engine.activatePlayer(p1.id)
+        engine.activatePlayer(p2.id)
+        engine.activatePlayer(p3.id)
+
+        engine.start()
+        engine.move(p2.id, DOWN)
+        engine.move(p3.id, DOWN)
+        engine.move(p3.id, DOWN)
+        engine.deactivatePlayer(p2.id)
+        engine.activatePlayer(p2.id)
+
+        scoreScheduler.run()
+        scoreScheduler.run()
+
+        val players = engine.getAllPlayers().map { it.id to it }.toMap()
+        assertThat(players[p1.id]!!.score, equalTo(6))
+        assertThat(players[p2.id]!!.score, equalTo(6))
+        assertThat(players[p3.id]!!.score, equalTo(6))
+    }
+
+    @Test
+    fun activationAndDeactivationOfTheSamePersonDoesntAffectAnything() {
+        val scoreControl = ScoreControlImpl(
+            timerControl = gameControl,
+            playerListStore = playerControl,
+            figureGenerator = FigureGeneratorDiagonal(),
+            scoreScheduler = scoreScheduler
+        )
+        val engine = EngineV1Impl(playerControl, gameControl, scoreControl)
+        val p1 = engine.addPlayer()
+        val p2 = engine.addPlayer()
+        val p3 = engine.addPlayer()
+        engine.activatePlayer(p1.id)
+        engine.activatePlayer(p2.id)
+
+        engine.start()
+        engine.move(p2.id, DOWN)
+        engine.activatePlayer(p3.id)
+        engine.deactivatePlayer(p3.id)
+
+        scoreScheduler.run()
+        scoreScheduler.run()
+
+        val players = engine.getAllPlayers().map { it.id to it }.toMap()
+        assertThat(players[p1.id]!!.score, equalTo(4))
+        assertThat(players[p2.id]!!.score, equalTo(4))
+        assertThat(players[p3.id]!!.score, equalTo(0))
     }
 }
